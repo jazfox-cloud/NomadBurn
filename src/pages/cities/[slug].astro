@@ -1,0 +1,144 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { cities, cityImages, cityLabel, citySlugs, destinationNames } from "../../data/cities";
+import { calculateBurn } from "../../lib/calculateBurn";
+import { cityMetaDescription, cityPath, money } from "../../lib/seo";
+
+export function getStaticPaths() {
+  return destinationNames.map((city) => ({
+    params: { slug: citySlugs[city] },
+    props: { city },
+  }));
+}
+
+const { city } = Astro.props;
+const cost = cities[city];
+const result = calculateBurn({
+  currentSavings: 12000,
+  monthlyIncome: 1800,
+  incomeTaxMode: "need_tax_reserve",
+  taxReservePct: 20,
+  monthlyFixedCosts: 100,
+  destination: city,
+  accommodationStyle: "coliving",
+  coworkingFreqPerWeek: 3,
+  flightVisaBuffer: 150,
+  paymentLossPct: 3,
+  incomeStability: "stable",
+  timezoneGapHours: 6,
+});
+
+const label = cityLabel(city);
+const title = `${label} Digital Nomad Burn Rate Calculator | NomadBurn`;
+const description = cityMetaDescription(city);
+const canonicalPath = cityPath(city);
+const coworkingMonthly = cost.coworkingCost * 3 * 4.33;
+const alternativeCities = destinationNames.filter((name) => name !== city).slice(0, 4);
+const runwayLabel = Number.isFinite(result.runwayMonths)
+  ? `${result.runwayMonths.toFixed(1)} months`
+  : "Infinite runway";
+---
+
+<BaseLayout title={title} description={description} canonicalPath={canonicalPath}>
+  <section class="content-hero">
+    <p class="eyebrow">City burn guide</p>
+    <h1>{label} digital nomad burn rate calculator</h1>
+    <p class="subtitle">
+      Estimate how a {label} nomad setup affects your monthly burn, runway, and break-even income.
+      These numbers are rough 2026 planning assumptions, not live quotes.
+    </p>
+    <a class="text-button" href={`/?destination=${encodeURIComponent(city)}`}>Use the live calculator</a>
+  </section>
+
+  <figure class="city-hero-image">
+    <img src={cityImages[city].src} alt={cityImages[city].alt} decoding="async" />
+    <figcaption>
+      Photo source: <a href={cityImages[city].creditHref} rel="nofollow">Wikimedia / Wikipedia</a>
+    </figcaption>
+  </figure>
+
+  <section class="content-grid">
+    <article class="content-panel wide">
+      <h2>{label} Monthly Cost Snapshot</h2>
+      <div class="table-wrap">
+        <table>
+          <tbody>
+            <tr>
+              <th>Base living cost</th>
+              <td>{money(cost.baseLivingCost)} / month</td>
+            </tr>
+            <tr>
+              <th>Coliving rent</th>
+              <td>{money(cost.colivingRent)} / month</td>
+            </tr>
+            <tr>
+              <th>Airbnb / solo apartment</th>
+              <td>{money(cost.airbnbRent)} / month</td>
+            </tr>
+            <tr>
+              <th>Hostel / budget room</th>
+              <td>{money(cost.hostelRent)} / month</td>
+            </tr>
+            <tr>
+              <th>Three coworking or cafe sessions per week</th>
+              <td>{money(coworkingMonthly)} / month</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <aside class="content-panel">
+      <h2>Sample Result</h2>
+      <p class="stat-line"><span>Monthly burn</span><strong>{money(result.burnRate)}</strong></p>
+      <p class="stat-line"><span>Runway on $12,000</span><strong>{runwayLabel}</strong></p>
+      <p class="stat-line"><span>Break-even income</span><strong>{money(result.breakEvenIncome)}</strong></p>
+      <p class="source-note">
+        Sample assumes $1,800 monthly income, 20% tax reserve, 3% payment loss, coliving, $100 fixed
+        costs, and a $150 travel buffer.
+      </p>
+    </aside>
+  </section>
+
+  <section class="content-panel">
+    <h2>How to Use This {label} Estimate</h2>
+    <p>
+      Start with the sample setup, then replace every assumption with your real quotes: housing,
+      insurance, subscriptions, tax reserve, card fees, payment-platform fees, and flight or visa
+      buffers. A small monthly leak can erase the advantage of a low-cost destination.
+    </p>
+    <div class="formula-box">
+      <strong>Planning rule</strong>
+      <span>
+        Treat {label} as affordable only if your net income clears the monthly cost with a buffer,
+        not just on the cheapest possible rent.
+      </span>
+    </div>
+  </section>
+
+  <section class="content-panel faq">
+    <h2>{label} Burn Rate FAQ</h2>
+    <h3>Are these {label} costs live prices?</h3>
+    <p>
+      No. They are rough planning assumptions for 2026. Use them to compare scenarios, then verify
+      housing and local costs before making a move.
+    </p>
+    <h3>What changes the burn rate fastest?</h3>
+    <p>
+      Accommodation style usually moves the number most. Tax reserve, payment loss, fixed costs, and
+      flight or visa buffers can also change the result quickly.
+    </p>
+    <h3>Can NomadBurn tell me whether I should move?</h3>
+    <p>
+      No. It is an educational planning calculator, not financial, tax, legal, investment, or
+      immigration advice.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>Compare Nearby Planning Pages</h2>
+    <div class="link-grid">
+      {alternativeCities.map((name) => <a href={cityPath(name)}>{cityLabel(name)} burn rate</a>)}
+    </div>
+  </section>
+</BaseLayout>

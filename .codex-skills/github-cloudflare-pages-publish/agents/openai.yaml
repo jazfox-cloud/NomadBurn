@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Cloudflare Pages Publish"
+  short_description: "Publish static sites through GitHub-backed Cloudflare Pages"
+  default_prompt: "Publish this website to GitHub and Cloudflare Pages, then verify the live domain."

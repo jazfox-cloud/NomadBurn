@@ -1,0 +1,417 @@
+---
+import { cityImages, cityLabel, destinationNames } from "../data/cities";
+import { cityPath, monthlyCostFor, money } from "../lib/seo";
+import "../styles/global.css";
+
+const title = "NomadBurn | Digital Nomad Burn Rate Calculator";
+const description =
+  "Calculate your digital nomad burn rate, runway, and break-even income before moving abroad.";
+const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as const;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href="https://nomadburn.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="Find out where your money survives longest." />
+    <meta property="og:url" content="https://nomadburn.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="container">
+        <header class="topbar" aria-label="Site header">
+          <a class="brand" href="/" aria-label="NomadBurn home">
+            <span class="brand-mark" aria-hidden="true">NB</span>
+            <span>NomadBurn</span>
+          </a>
+          <nav class="site-nav" aria-label="Primary navigation">
+            <a href="/">Calculator</a>
+            <a href="/nomad-runway-calculator/">Runway</a>
+            <a href="/cities/">Cities</a>
+          </nav>
+        </header>
+
+        <section class="hero" aria-labelledby="main-title">
+          <p class="eyebrow">Digital nomad runway calculator</p>
+          <h1 id="main-title">Calculate your digital nomad burn rate.</h1>
+          <p class="subtitle">
+            See how fast your money disappears in the world's top remote-work cities and how long
+            your savings will last.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="text-button" href="#burn-form">Start with your numbers</a>
+            <a class="ghost-button" href="/cities/">Browse city burn guides</a>
+          </div>
+          <div class="insight-strip" aria-label="NomadBurn planning signals">
+            <div>
+              <strong>10</strong>
+              <span>remote-work cities</span>
+            </div>
+            <div>
+              <strong>3</strong>
+              <span>core numbers: burn, runway, break-even</span>
+            </div>
+            <div>
+              <strong>0</strong>
+              <span>signup required for the calculator</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="workspace" aria-label="NomadBurn calculator">
+          <form id="burn-form" class="tool-panel">
+            <section class="form-section" aria-labelledby="money-title">
+              <h2 id="money-title" class="section-title">Your Money</h2>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="currentSavings">Current savings (USD)</label>
+                  <input id="currentSavings" name="currentSavings" type="number" min="0" value="12000" />
+                </div>
+                <div class="field">
+                  <label for="monthlyIncome">Monthly income (USD)</label>
+                  <input id="monthlyIncome" name="monthlyIncome" type="number" min="0" value="1800" />
+                </div>
+                <div class="field full">
+                  <label for="incomeTaxMode">Income tax status</label>
+                  <select id="incomeTaxMode" name="incomeTaxMode">
+                    <option value="need_tax_reserve" selected>Reserve taxes from income</option>
+                    <option value="already_taxed">Income already taxed</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="taxReservePct">Tax reserve (%)</label>
+                  <input id="taxReservePct" name="taxReservePct" type="number" min="0" max="100" value="20" />
+                </div>
+                <div class="field">
+                  <label for="monthlyFixedCosts">Fixed costs (USD)</label>
+                  <input id="monthlyFixedCosts" name="monthlyFixedCosts" type="number" min="0" value="100" />
+                </div>
+              </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="destination-title">
+              <h2 id="destination-title" class="section-title">Your Destination</h2>
+              <div class="field-grid">
+                <div class="field full">
+                  <label class="hint-row" for="destination">
+                    Destination
+                    <span
+                      class="hint"
+                      title="Rough mid-range planning estimates for 2026. Custom city tracking coming soon."
+                      >?</span
+                    >
+                  </label>
+                  <select id="destination" name="destination">
+                    {destinationNames.map((city) => <option value={city}>{cityLabel(city)}</option>)}
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="accommodationStyle">Accommodation</label>
+                  <select id="accommodationStyle" name="accommodationStyle">
+                    <option value="coliving" selected>Coliving Space</option>
+                    <option value="airbnb_solo">Airbnb / Solo apartment</option>
+                    <option value="hostel">Hostel / Budget room</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="coworkingFreqPerWeek">Coworking visits / week</label>
+                  <input
+                    id="coworkingFreqPerWeek"
+                    name="coworkingFreqPerWeek"
+                    type="number"
+                    min="0"
+                    value="3"
+                  />
+                </div>
+                <div class="field full">
+                  <label for="flightVisaBuffer">Monthly flight / visa buffer (USD)</label>
+                  <input id="flightVisaBuffer" name="flightVisaBuffer" type="number" min="0" value="150" />
+                </div>
+              </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="friction-title">
+              <h2 id="friction-title" class="section-title">Hidden Friction</h2>
+              <div class="field-grid">
+                <div class="field">
+                  <label for="paymentLossPct">Payment loss (%)</label>
+                  <input id="paymentLossPct" name="paymentLossPct" type="number" min="0" max="100" value="3" />
+                </div>
+                <div class="field">
+                  <label for="timezoneGapHours">Timezone gap (hours)</label>
+                  <input id="timezoneGapHours" name="timezoneGapHours" type="number" min="0" max="24" value="6" />
+                </div>
+                <div class="field full">
+                  <label for="incomeStability">Income stability</label>
+                  <select id="incomeStability" name="incomeStability">
+                    <option value="stable" selected>Stable salary or retainer</option>
+                    <option value="variable">Variable freelance income</option>
+                    <option value="risky">Unpredictable project income</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+          </form>
+
+          <aside class="result-panel" aria-live="polite">
+            <div class="result-header">
+              <div>
+                <h2>Your burn dashboard</h2>
+                <p id="risk-helper" class="ai-copy">You have breathing room, but hidden costs still matter.</p>
+              </div>
+              <span id="risk-pill" class="risk-pill risk-comfortable">Comfortable</span>
+            </div>
+
+            <div class="cards">
+              <article class="metric-card">
+                <span>Monthly Burn</span>
+                <strong id="burn-rate">$0</strong>
+                <p id="burn-copy">You are not burning savings. Your monthly cashflow is positive.</p>
+              </article>
+              <article class="metric-card">
+                <span>Your Runway</span>
+                <strong id="runway">Infinite</strong>
+                <p id="runway-copy">Your current setup is cashflow-positive.</p>
+              </article>
+              <article class="metric-card">
+                <span>Break-even Income</span>
+                <strong id="break-even">$0</strong>
+                <p>This is the minimum monthly income you need to stop burning savings.</p>
+              </article>
+            </div>
+
+            <section class="breakdown" aria-labelledby="breakdown-title">
+              <h3 id="breakdown-title" class="section-title">Monthly cashflow breakdown</h3>
+              <div class="breakdown-grid">
+                <div class="breakdown-row"><span>Estimated rent</span><strong id="rent">$0</strong></div>
+                <div class="breakdown-row"><span>Coworking / cafe</span><strong id="coworking">$0</strong></div>
+                <div class="breakdown-row"><span>Total living cost</span><strong id="living-cost">$0</strong></div>
+                <div class="breakdown-row"><span>Tax reserve</span><strong id="tax-reserve">$0</strong></div>
+                <div class="breakdown-row"><span>Payment loss</span><strong id="payment-loss">$0</strong></div>
+                <div class="breakdown-row"><span>Net cashflow</span><strong id="cashflow">$0</strong></div>
+              </div>
+            </section>
+
+            <section class="ai-box" aria-labelledby="ai-title">
+              <h3 id="ai-title">AI CFO Diagnosis</h3>
+              <p class="ai-copy">
+                The calculator is instant. The AI diagnosis is optional and will focus on hidden
+                friction, not repeating the math you already see.
+              </p>
+              <button id="diagnose-button" class="primary-button" type="button">Run AI diagnosis</button>
+              <div id="diagnosis-output" class="diagnosis-output"></div>
+            </section>
+
+            <section class="lead-box" aria-labelledby="lead-title">
+              <h3 id="lead-title">Get the survival file</h3>
+              <p id="lead-copy" class="ai-copy">Get the Self-Sustaining Nomad Setup Checklist.</p>
+              <form class="lead-form">
+                <input type="email" aria-label="Email address" placeholder="you@example.com" />
+                <button id="lead-button" class="secondary-button" type="submit">Send me the checklist</button>
+              </form>
+            </section>
+
+            <p class="disclaimer">
+              <strong>Disclaimer:</strong> NomadBurn is an educational planning tool. It does not
+              provide financial, tax, legal, investment, or immigration advice. Cost estimates are
+              rough assumptions based on 2026 planning data and may not reflect your actual expenses.
+              Please consult a professional before moving.
+            </p>
+          </aside>
+        </section>
+
+        <section class="home-section" aria-labelledby="featured-cities-title">
+          <div class="section-heading-row">
+            <div>
+              <p class="eyebrow">City guides</p>
+              <h2 id="featured-cities-title">Start with a real destination.</h2>
+            </div>
+            <a class="ghost-button" href="/cities/">View all cities</a>
+          </div>
+          <div class="featured-city-grid">
+            {
+              featuredCities.map((city) => (
+                <a class="featured-city" href={cityPath(city)}>
+                  <img src={cityImages[city].src} alt={cityImages[city].alt} loading="lazy" decoding="async" />
+                  <span>{cityLabel(city)}</span>
+                  <strong>{money(monthlyCostFor(city))} sample setup</strong>
+                </a>
+              ))
+            }
+          </div>
+        </section>
+
+        <footer class="footer">
+          <strong>Disclaimer:</strong> NomadBurn is for educational planning only, not financial, tax,
+          legal, investment, or immigration advice.
+        </footer>
+      </div>
+    </main>
+
+    <script>
+      import { calculateBurn } from "../lib/calculateBurn";
+      import type { BurnInputs, IncomeStability, IncomeTaxMode } from "../lib/calculateBurn";
+      import type { AccommodationStyle, Destination } from "../data/cities";
+      import { estimateRunwayEndDate, getLeadMagnet, getRiskProfile } from "../lib/risk";
+
+      const requiredElement = <T extends Element>(selector: string): T => {
+        const element = document.querySelector<T>(selector);
+        if (!element) {
+          throw new Error(`Missing required element: ${selector}`);
+        }
+        return element;
+      };
+
+      const form = requiredElement<HTMLFormElement>("#burn-form");
+      const diagnoseButton = requiredElement<HTMLButtonElement>("#diagnose-button");
+      const diagnosisOutput = requiredElement<HTMLElement>("#diagnosis-output");
+
+      const money = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      });
+
+      const byId = (id: string): HTMLElement => requiredElement<HTMLElement>(`#${id}`);
+      const field = (name: string): HTMLInputElement | HTMLSelectElement => {
+        const input = form.elements.namedItem(name);
+        if (!(input instanceof HTMLInputElement || input instanceof HTMLSelectElement)) {
+          throw new Error(`Missing form field: ${name}`);
+        }
+        return input;
+      };
+
+      const numberValue = (name: string): number => Number(field(name).value || 0);
+
+      const readInputs = (): BurnInputs => ({
+        currentSavings: numberValue("currentSavings"),
+        monthlyIncome: numberValue("monthlyIncome"),
+        incomeTaxMode: field("incomeTaxMode").value as IncomeTaxMode,
+        taxReservePct: numberValue("taxReservePct"),
+        monthlyFixedCosts: numberValue("monthlyFixedCosts"),
+        destination: field("destination").value as Destination,
+        accommodationStyle: field("accommodationStyle").value as AccommodationStyle,
+        coworkingFreqPerWeek: numberValue("coworkingFreqPerWeek"),
+        flightVisaBuffer: numberValue("flightVisaBuffer"),
+        paymentLossPct: numberValue("paymentLossPct"),
+        incomeStability: field("incomeStability").value as IncomeStability,
+        timezoneGapHours: numberValue("timezoneGapHours"),
+      });
+
+      const setText = (id: string, value: string) => {
+        byId(id).textContent = value;
+      };
+
+      const render = () => {
+        const inputs = readInputs();
+        const result = calculateBurn(inputs);
+        const risk = getRiskProfile(result.runwayMonths);
+        const lead = getLeadMagnet(result.runwayMonths);
+
+        setText("burn-rate", `${money.format(result.burnRate)} / month`);
+        setText(
+          "burn-copy",
+          result.burnRate > 0
+            ? `You are burning ${money.format(result.burnRate)} from your savings every month in ${inputs.destination}.`
+            : "You are not burning savings. Your monthly cashflow is positive.",
+        );
+        setText(
+          "runway",
+          Number.isFinite(result.runwayMonths) ? `${result.runwayMonths.toFixed(1)} months` : "Infinite",
+        );
+        setText(
+          "runway-copy",
+          Number.isFinite(result.runwayMonths)
+            ? `At this pace, your current savings last until around ${estimateRunwayEndDate(result.runwayMonths)}.`
+            : "Your current setup is cashflow-positive.",
+        );
+        setText("break-even", `${money.format(result.breakEvenIncome)} / month`);
+        setText("rent", money.format(result.rent));
+        setText("coworking", money.format(result.coworkingCost));
+        setText("living-cost", money.format(result.monthlyLivingCost));
+        setText("tax-reserve", money.format(result.taxReserve));
+        setText("payment-loss", money.format(result.paymentLoss));
+        setText("cashflow", money.format(result.monthlyNetCashflow));
+        setText("risk-helper", risk.helper);
+        setText("lead-copy", lead.title);
+        setText("lead-button", lead.button);
+
+        const pill = byId("risk-pill");
+        pill.textContent = risk.label;
+        pill.className = `risk-pill risk-${risk.band}`;
+      };
+
+      const applyUrlDefaults = () => {
+        const params = new URLSearchParams(window.location.search);
+        const destination = params.get("destination");
+        if (destination) {
+          const destinationField = field("destination") as HTMLSelectElement;
+          const matchingOption = [...destinationField.options].some((option) => option.value === destination);
+          if (matchingOption) {
+            destinationField.value = destination;
+          }
+        }
+      };
+
+      let cooldownTimer = 0;
+      const startCooldown = () => {
+        let remaining = 30;
+        diagnoseButton.disabled = true;
+        diagnoseButton.textContent = `Cooling down (${remaining}s)`;
+        cooldownTimer = window.setInterval(() => {
+          remaining -= 1;
+          diagnoseButton.textContent = remaining > 0 ? `Cooling down (${remaining}s)` : "Run AI diagnosis";
+          if (remaining <= 0) {
+            window.clearInterval(cooldownTimer);
+            diagnoseButton.disabled = false;
+          }
+        }, 1000);
+      };
+
+      diagnoseButton.addEventListener("click", async () => {
+        const inputs = readInputs();
+        const result = calculateBurn(inputs);
+        startCooldown();
+        diagnosisOutput.style.display = "block";
+        diagnosisOutput.textContent = "Drafting a sober second opinion...";
+
+        try {
+          const response = await fetch("/api/diagnose", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ inputs, result }),
+          });
+
+          if (!response.ok || !response.body) {
+            throw new Error("AI diagnosis unavailable");
+          }
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          diagnosisOutput.textContent = "";
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            diagnosisOutput.textContent += decoder.decode(value, { stream: true });
+          }
+        } catch {
+          diagnosisOutput.textContent =
+            "## The Verdict\nYour calculator still works. The AI layer is unavailable right now.\n\n## Do This Now\n1. Recheck rent and fixed costs against your actual last 30 days.\n2. Keep a separate tax reserve account.\n3. Reduce payment and currency loss before changing cities.";
+        }
+      });
+
+      form.addEventListener("input", render);
+      form.addEventListener("change", render);
+      applyUrlDefaults();
+      render();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { cities, cityImages, cityLabel, destinationNames } from "../../data/cities";
+import { cityPath, money, monthlyCostFor } from "../../lib/seo";
+
+const title = "Digital Nomad City Burn Rate Guides | NomadBurn";
+const description =
+  "Browse digital nomad burn rate estimates by city, including rough 2026 planning costs for rent, living expenses, coworking, and runway.";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/cities/">
+  <section class="content-hero">
+    <p class="eyebrow">City burn guides</p>
+    <h1>Digital nomad burn rate by city</h1>
+    <p class="subtitle">
+      Pick a city to see rough planning costs and understand how rent, lifestyle, coworking, and
+      travel buffers change the monthly burn.
+    </p>
+  </section>
+
+  <section class="city-grid" aria-label="City burn rate guides">
+    {
+      destinationNames.map((city) => (
+        <article class="city-card">
+          <img
+            class="city-card-image"
+            src={cityImages[city].src}
+            alt={cityImages[city].alt}
+            loading="lazy"
+            decoding="async"
+          />
+          <h2><a href={cityPath(city)}>{cityLabel(city)}</a></h2>
+          <p>
+            Sample coliving setup: <strong>{money(monthlyCostFor(city))} / month</strong>.
+          </p>
+          <dl>
+            <div>
+              <dt>Coliving</dt>
+              <dd>{money(cities[city].colivingRent)}</dd>
+            </div>
+            <div>
+              <dt>Airbnb solo</dt>
+              <dd>{money(cities[city].airbnbRent)}</dd>
+            </div>
+            <div>
+              <dt>Hostel</dt>
+              <dd>{money(cities[city].hostelRent)}</dd>
+            </div>
+          </dl>
+        </article>
+      ))
+    }
+  </section>
+</BaseLayout>

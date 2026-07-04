@@ -1,0 +1,52 @@
+---
+import "../styles/global.css";
+
+type Props = {
+  title: string;
+  description: string;
+  canonicalPath: string;
+};
+
+const { title, description, canonicalPath } = Astro.props;
+const canonicalUrl = new URL(canonicalPath, "https://nomadburn.com").toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="container">
+        <header class="topbar" aria-label="Site header">
+          <a class="brand" href="/" aria-label="NomadBurn home">
+            <span class="brand-mark" aria-hidden="true">NB</span>
+            <span>NomadBurn</span>
+          </a>
+          <nav class="site-nav" aria-label="Primary navigation">
+            <a href="/">Calculator</a>
+            <a href="/nomad-runway-calculator/">Runway</a>
+            <a href="/cities/">Cities</a>
+          </nav>
+        </header>
+
+        <slot />
+
+        <footer class="footer">
+          <strong>Disclaimer:</strong> NomadBurn is for educational planning only, not financial, tax,
+          legal, investment, or immigration advice.
+        </footer>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { cityLabel, destinationNames } from "../data/cities";
+import { cityPath, money, monthlyCostFor } from "../lib/seo";
+
+const title = "Digital Nomad Burn Rate Calculator | NomadBurn";
+const description =
+  "Use NomadBurn to calculate your digital nomad burn rate, monthly runway, and break-even income before moving abroad.";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/digital-nomad-burn-rate-calculator/">
+  <section class="content-hero">
+    <p class="eyebrow">Burn rate calculator</p>
+    <h1>Digital nomad burn rate calculator</h1>
+    <p class="subtitle">
+      Burn rate is the amount of money your nomad setup removes from savings each month after
+      income, tax reserve, payment loss, rent, living costs, coworking, fixed costs, and travel
+      buffers.
+    </p>
+    <a class="text-button" href="/">Open the calculator</a>
+  </section>
+
+  <section class="content-grid">
+    <article class="content-panel wide">
+      <h2>What NomadBurn Calculates</h2>
+      <p>
+        The calculator separates your monthly living cost from your monthly net income. If net
+        income is lower than the cost of the destination, the gap becomes your monthly burn rate.
+        Your runway is then estimated by dividing savings by that monthly burn.
+      </p>
+      <div class="formula-box">
+        <strong>Monthly burn</strong>
+        <span>Monthly living cost - monthly net income</span>
+      </div>
+      <div class="formula-box">
+        <strong>Runway</strong>
+        <span>Current savings / monthly burn</span>
+      </div>
+      <div class="formula-box">
+        <strong>Break-even income</strong>
+        <span>Monthly living cost adjusted for tax reserve and payment loss</span>
+      </div>
+    </article>
+
+    <aside class="content-panel">
+      <h2>Best for</h2>
+      <ul class="plain-list">
+        <li>Remote workers planning a move abroad.</li>
+        <li>Freelancers with variable income.</li>
+        <li>Indie hackers comparing low-cost bases.</li>
+        <li>Nomads checking whether their current setup is leaking cash.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="content-panel">
+    <h2>Rough Monthly Planning Costs by City</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>City</th>
+            <th>Coliving setup estimate</th>
+            <th>Calculator page</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            destinationNames.map((city) => (
+              <tr>
+                <td>{cityLabel(city)}</td>
+                <td>{money(monthlyCostFor(city))} / month</td>
+                <td><a href={cityPath(city)}>View city burn</a></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="source-note">
+      These are rough 2026 planning assumptions, not live market prices. Use them to pressure-test
+      a move, then replace them with your own quotes before booking housing.
+    </p>
+  </section>
+</BaseLayout>

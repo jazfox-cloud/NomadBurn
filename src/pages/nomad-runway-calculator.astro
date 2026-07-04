@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Nomad Runway Calculator | How Long Will Your Savings Last?";
+const description =
+  "Calculate how many months your savings can support your digital nomad plan after rent, living costs, tax reserve, payment loss, and travel buffers.";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/nomad-runway-calculator/">
+  <section class="content-hero">
+    <p class="eyebrow">Runway calculator</p>
+    <h1>Nomad runway calculator</h1>
+    <p class="subtitle">
+      Runway tells you how long your savings last if your destination costs more than your net
+      monthly income. It is the survival clock behind every digital nomad budget.
+    </p>
+    <a class="text-button" href="/">Calculate your runway</a>
+  </section>
+
+  <section class="content-grid">
+    <article class="content-panel wide">
+      <h2>How Nomad Runway Works</h2>
+      <p>
+        A normal travel budget usually stops at rent and food. A nomad runway calculation also needs
+        to include fixed costs back home, tax reserve, platform fees, exchange loss, coworking,
+        flights, visa runs, and income stability.
+      </p>
+      <ol class="number-list">
+        <li>Estimate the monthly cost of the destination and lifestyle.</li>
+        <li>Subtract tax reserve and payment loss from monthly income.</li>
+        <li>Compare net income against monthly living cost.</li>
+        <li>Divide savings by monthly burn if cashflow is negative.</li>
+      </ol>
+    </article>
+
+    <aside class="content-panel">
+      <h2>Risk Bands</h2>
+      <ul class="plain-list">
+        <li><strong>0-3 months:</strong> Critical countdown.</li>
+        <li><strong>3-6 months:</strong> Risky plan.</li>
+        <li><strong>6-12 months:</strong> Manageable but fragile.</li>
+        <li><strong>12+ months:</strong> Comfortable.</li>
+        <li><strong>Positive cashflow:</strong> Infinite runway.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="content-panel faq">
+    <h2>Runway FAQ</h2>
+    <h3>Is infinite runway realistic?</h3>
+    <p>
+      It only means the current monthly cashflow is positive in the calculator. It does not remove
+      the need for emergency savings, tax planning, insurance, or legal advice.
+    </p>
+    <h3>Should tax reserve count as spending?</h3>
+    <p>
+      For planning, yes. If income is not already taxed, reserve it before judging whether a city is
+      affordable.
+    </p>
+    <h3>Why include payment loss?</h3>
+    <p>
+      Cross-border payments, exchange spreads, card fees, platform fees, and withdrawal costs can
+      quietly reduce usable income before it reaches your budget.
+    </p>
+  </section>
+</BaseLayout>
