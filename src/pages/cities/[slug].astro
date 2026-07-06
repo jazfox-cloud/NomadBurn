@@ -1,6 +1,13 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { cities, cityImages, cityLabel, citySlugs, destinationNames } from "../../data/cities";
+import {
+  cities,
+  cityDeepDives,
+  cityImages,
+  cityLabel,
+  citySlugs,
+  destinationNames,
+} from "../../data/cities";
 import { calculateBurn } from "../../lib/calculateBurn";
 import { cityMetaDescription, cityPath, money } from "../../lib/seo";
 
@@ -37,6 +44,7 @@ const alternativeCities = destinationNames.filter((name) => name !== city).slice
 const runwayLabel = Number.isFinite(result.runwayMonths)
   ? `${result.runwayMonths.toFixed(1)} months`
   : "Infinite runway";
+const deepDive = cityDeepDives[city];
 ---
 
 <BaseLayout title={title} description={description} canonicalPath={canonicalPath}>
@@ -115,6 +123,37 @@ const runwayLabel = Number.isFinite(result.runwayMonths)
       </span>
     </div>
   </section>
+
+  {
+    deepDive && (
+      <section class="content-panel city-deep-dive">
+        <h2>{label} Runway Planning Notes</h2>
+        <div class="deep-dive-grid">
+          <div>
+            <h3>Best fit</h3>
+            <ul class="plain-list">
+              {deepDive.bestFor.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h3>Watch before booking</h3>
+            <ul class="plain-list">
+              {deepDive.watchOuts.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        </div>
+        <h3>Budget traps</h3>
+        <ul class="plain-list trap-list">
+          {deepDive.budgetTraps.map((item) => <li>{item}</li>)}
+        </ul>
+        <div class="formula-box">
+          <strong>Runway example</strong>
+          <span>{deepDive.runwayExample}</span>
+        </div>
+        <p>{deepDive.planningNote}</p>
+      </section>
+    )
+  }
 
   <section class="content-panel faq">
     <h2>{label} Burn Rate FAQ</h2>

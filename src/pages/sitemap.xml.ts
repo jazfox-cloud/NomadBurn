@@ -8,6 +8,7 @@ export function GET() {
     "/digital-nomad-burn-rate-calculator/",
     "/nomad-runway-calculator/",
     "/digital-nomad-cost-of-living/",
+    "/methodology/",
     "/cities/",
     ...destinationNames.map((city) => `/cities/${citySlugs[city]}/`),
   ];

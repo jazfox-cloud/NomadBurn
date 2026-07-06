@@ -20,6 +20,14 @@ export type CityCost = {
   coworkingCost: number;
 };
 
+export type CityDeepDive = {
+  bestFor: string[];
+  watchOuts: string[];
+  budgetTraps: string[];
+  runwayExample: string;
+  planningNote: string;
+};
+
 export const cities: Record<Destination, CityCost> = {
   "Chiang Mai": {
     baseLivingCost: 500,
@@ -179,5 +187,71 @@ export const cityImages: Record<Destination, { src: string; alt: string; creditH
     src: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Puerto_Madero_-_Puente_de_la_mujer_%2844673627614%29.jpg/960px-Puerto_Madero_-_Puente_de_la_mujer_%2844673627614%29.jpg",
     alt: "Puerto Madero and Puente de la Mujer in Buenos Aires",
     creditHref: "https://en.wikipedia.org/wiki/Buenos_Aires",
+  },
+};
+
+export const cityDeepDives: Partial<Record<Destination, CityDeepDive>> = {
+  "Chiang Mai": {
+    bestFor: [
+      "Remote workers who want a lower baseline burn rate without giving up cafes, coworking, and a large nomad community.",
+      "Founders or freelancers who need a quiet reset month where housing and daily food costs are easier to control.",
+      "Nomads testing whether Southeast Asia can extend runway before committing to a more expensive base.",
+    ],
+    watchOuts: [
+      "Air quality can change the real cost picture if you need air purifiers, short escapes, or a better sealed apartment.",
+      "The cheapest rooms may be far from the work and social areas that make the city useful.",
+      "Visa runs and regional flights should be treated as part of monthly burn, not a surprise expense.",
+    ],
+    budgetTraps: [
+      "Overpaying for a short monthly rental before checking neighborhood walkability.",
+      "Using cafe work every day without tracking the food and drink minimums.",
+      "Assuming low base costs cancel out tax reserve or home-country fixed costs.",
+    ],
+    runwayExample:
+      "A $12,000 savings buffer with $1,800 monthly income can look comfortable in Chiang Mai, but the plan is only durable if tax reserve, insurance, and travel buffers are funded every month.",
+    planningNote:
+      "Use Chiang Mai as the low-burn benchmark, then compare every higher-cost city against the number of extra client hours or product revenue it requires.",
+  },
+  "Bali Canggu": {
+    bestFor: [
+      "Nomads who value surf, wellness, creator communities, and frequent meetups enough to accept a higher lifestyle creep risk.",
+      "Freelancers who can monetize network density and do not need the absolute cheapest Southeast Asia base.",
+      "Remote workers who want a social landing pad for one to three months before choosing a quieter long-term base.",
+    ],
+    watchOuts: [
+      "Canggu can become expensive quickly when transport, gym, coworking, and Western food all stack together.",
+      "Monthly villas and private rooms vary widely by season, location, and how early you book.",
+      "Traffic can turn a cheap room into an expensive decision if it sits far from your daily work spots.",
+    ],
+    budgetTraps: [
+      "Pricing the trip from hostel costs while actually living a villa-and-coworking lifestyle.",
+      "Ignoring scooter, ride-hailing, gym, and weekend trip costs.",
+      "Treating a first-week social schedule as if it were a sustainable monthly budget.",
+    ],
+    runwayExample:
+      "A $12,000 runway can shrink faster in Canggu than the headline Southeast Asia label suggests. Model the version of Bali you will actually live, not the cheapest version someone posted about.",
+    planningNote:
+      "Use Canggu as a lifestyle-creep stress test: if the calculator stays healthy here, cheaper nearby bases should give you more safety margin.",
+  },
+  Lisbon: {
+    bestFor: [
+      "Nomads who want European infrastructure, timezone overlap with both Europe and parts of the Americas, and a larger English-speaking remote-work scene.",
+      "Remote employees with stable income who can justify a higher rent baseline for connectivity and quality of life.",
+      "Founders who need a professional base for meetings, travel links, and a stronger long-stay routine.",
+    ],
+    watchOuts: [
+      "Housing is the main pressure point; a small rent miss can dominate the entire monthly burn calculation.",
+      "Seasonality can push short-stay prices above the calm planning estimate.",
+      "Eating out, transport, and weekend travel can make the city feel less affordable than the rent number alone suggests.",
+    ],
+    budgetTraps: [
+      "Using older Lisbon cost anecdotes that predate the current housing market.",
+      "Comparing Lisbon to Southeast Asia without adding the income upside or timezone value.",
+      "Forgetting that a higher fixed rent makes income dips more dangerous.",
+    ],
+    runwayExample:
+      "With $12,000 saved, Lisbon can still be workable for a stable earner, but it leaves less room for income volatility than Chiang Mai or Da Nang.",
+    planningNote:
+      "Use Lisbon as the premium-base check: it should earn its place through timezone, clients, or life fit, not just vibes.",
   },
 };

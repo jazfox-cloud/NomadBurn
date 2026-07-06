@@ -642,6 +642,40 @@ select:focus {
   line-height: 1.5;
 }
 
+.deep-dive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.trap-list {
+  columns: 2;
+  column-gap: 28px;
+}
+
+.source-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.source-list a {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--accent-dark);
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+  padding: 12px;
+  text-decoration: none;
+}
+
+.source-list a:hover {
+  text-decoration: underline;
+}
+
 .table-wrap {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -674,6 +708,7 @@ th {
 
 td a,
 .city-card a,
+.source-note a,
 .link-grid a {
   color: var(--accent-dark);
   font-weight: 800;
@@ -682,6 +717,7 @@ td a,
 
 td a:hover,
 .city-card a:hover,
+.source-note a:hover,
 .link-grid a:hover {
   text-decoration: underline;
 }
@@ -800,6 +836,10 @@ td a:hover,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .source-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .city-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -830,9 +870,15 @@ td a:hover,
   .lead-form,
   .city-grid,
   .link-grid,
+  .source-list,
   .insight-strip,
+  .deep-dive-grid,
   .featured-city-grid {
     grid-template-columns: 1fr;
+  }
+
+  .trap-list {
+    columns: 1;
   }
 
   .section-heading-row {

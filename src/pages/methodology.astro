@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "NomadBurn Cost Methodology | Digital Nomad Planning Assumptions";
+const description =
+  "How NomadBurn builds rough digital nomad cost estimates, runway assumptions, and city burn rate planning ranges.";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/methodology/">
+  <section class="content-hero">
+    <p class="eyebrow">Planning methodology</p>
+    <h1>How NomadBurn builds cost estimates</h1>
+    <p class="subtitle">
+      NomadBurn is a planning calculator, not a live price feed. The city defaults are deliberately
+      conservative rough estimates so you can compare runway scenarios before replacing every number
+      with quotes from your own housing search, tax situation, and travel plan.
+    </p>
+  </section>
+
+  <section class="content-grid">
+    <article class="content-panel wide">
+      <h2>What the city defaults include</h2>
+      <p>
+        Each city estimate starts with a monthly base living cost, then adds one accommodation
+        style, coworking or cafe work sessions, fixed costs, and a travel or visa buffer. The
+        calculator then adjusts income for tax reserve and payment loss before estimating monthly
+        burn, runway, and break-even income.
+      </p>
+      <div class="formula-box">
+        <strong>Sample setup</strong>
+        <span>
+          Base living cost + housing + coworking or cafe work sessions + fixed costs + travel or
+          visa buffer.
+        </span>
+      </div>
+    </article>
+
+    <aside class="content-panel">
+      <h2>What it does not include</h2>
+      <ul class="plain-list">
+        <li>Real-time rental inventory.</li>
+        <li>Personal tax, immigration, or healthcare advice.</li>
+        <li>Investment, savings, or legal recommendations.</li>
+        <li>Emergency costs, dependents, debt payments, or local compliance fees.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="content-panel">
+    <h2>Source categories we check</h2>
+    <p>
+      The numbers are editorial planning assumptions informed by public cost-of-living databases,
+      monthly housing listings, hostel and short-stay marketplaces, coworking day-pass references,
+      and recent nomad community discussions. Because these sources move quickly and can disagree,
+      NomadBurn rounds the inputs into simple monthly planning defaults instead of pretending a
+      single live quote represents the whole city.
+    </p>
+    <div class="source-list">
+      <a href="https://www.numbeo.com/cost-of-living/" rel="nofollow">Numbeo cost-of-living data</a>
+      <a href="https://nomadlist.com/" rel="nofollow">Nomad List city benchmarks</a>
+      <a href="https://www.airbnb.com/" rel="nofollow">Airbnb monthly stay listings</a>
+      <a href="https://www.hostelworld.com/" rel="nofollow">Hostelworld budget accommodation</a>
+      <a href="https://www.coworker.com/" rel="nofollow">Coworker space references</a>
+    </div>
+  </section>
+
+  <section class="content-panel">
+    <h2>How to replace the defaults</h2>
+    <ol class="number-list">
+      <li>Find three realistic monthly housing options in the neighborhood where you would work.</li>
+      <li>Use your actual post-tax income, or add a tax reserve if income is not already taxed.</li>
+      <li>Add fixed costs that follow you abroad: insurance, software, subscriptions, debt, storage, and phone plans.</li>
+      <li>Estimate payment friction: card fees, transfer fees, currency conversion, and platform withdrawal loss.</li>
+      <li>Add a travel buffer for visas, flights, border runs, and emergency location changes.</li>
+    </ol>
+  </section>
+
+  <section class="content-panel faq">
+    <h2>Methodology FAQ</h2>
+    <h3>Why are the estimates rounded?</h3>
+    <p>
+      Rounded estimates are more honest for early planning. A precise-looking number can be worse
+      than a range when housing seasonality, neighborhood choice, and lifestyle are the real drivers.
+    </p>
+    <h3>How often should I update my plan?</h3>
+    <p>
+      Recheck rent before booking, then revisit the calculator every month or whenever your income,
+      visa situation, or base city changes.
+    </p>
+    <h3>Can I use NomadBurn as financial advice?</h3>
+    <p>
+      No. NomadBurn is educational planning software. Use it to structure questions and scenarios,
+      then verify important decisions with qualified tax, legal, financial, or immigration help.
+    </p>
+  </section>
+</BaseLayout>
