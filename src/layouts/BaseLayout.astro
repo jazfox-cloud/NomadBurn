@@ -5,10 +5,12 @@ type Props = {
   title: string;
   description: string;
   canonicalPath: string;
+  imagePath?: string;
 };
 
-const { title, description, canonicalPath } = Astro.props;
+const { title, description, canonicalPath, imagePath = "/nomadburn-og.svg" } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, "https://nomadburn.com").toString();
+const imageUrl = new URL(imagePath, "https://nomadburn.com").toString();
 ---
 
 <!doctype html>
@@ -23,7 +25,9 @@ const canonicalUrl = new URL(canonicalPath, "https://nomadburn.com").toString();
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={imageUrl} />
   </head>
   <body>
     <main class="page-shell">

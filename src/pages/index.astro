@@ -5,7 +5,7 @@ import "../styles/global.css";
 
 const title = "NomadBurn | Digital Nomad Burn Rate Calculator";
 const description =
-  "Calculate your digital nomad burn rate, runway, and break-even income before moving abroad.";
+  "Find out how long your savings last in 10 nomad cities before you book the move.";
 const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as const;
 ---
 
@@ -19,9 +19,11 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
     <link rel="canonical" href="https://nomadburn.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="Find out where your money survives longest." />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content="https://nomadburn.com/" />
+    <meta property="og:image" content="https://nomadburn.com/nomadburn-og.svg" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://nomadburn.com/nomadburn-og.svg" />
   </head>
   <body>
     <main class="page-shell">
@@ -42,8 +44,8 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
           <p class="eyebrow">Digital nomad runway calculator</p>
           <h1 id="main-title">Calculate your digital nomad burn rate.</h1>
           <p class="subtitle">
-            See how fast your money disappears in the world's top remote-work cities and how long
-            your savings will last.
+            Find out how long your savings last in 10 remote-work cities before you book the move.
+            Free, instant, and no signup required.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="text-button" href="#burn-form">Start with your numbers</a>
@@ -62,6 +64,30 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
               <strong>0</strong>
               <span>signup required for the calculator</span>
             </div>
+          </div>
+        </section>
+
+        <section class="product-strip" aria-labelledby="product-title">
+          <div>
+            <p class="eyebrow">What it does</p>
+            <h2 id="product-title">A quick money reality check for remote workers.</h2>
+          </div>
+          <div class="product-card-grid">
+            <article class="product-card">
+              <span>01</span>
+              <h3>Calculate monthly burn</h3>
+              <p>Combine rent, living costs, tax reserve, fixed costs, flights, and payment loss.</p>
+            </article>
+            <article class="product-card">
+              <span>02</span>
+              <h3>Compare city runway</h3>
+              <p>Test how the same savings and income hold up across popular nomad bases.</p>
+            </article>
+            <article class="product-card">
+              <span>03</span>
+              <h3>Find break-even income</h3>
+              <p>See the monthly income target that stops your setup from eating savings.</p>
+            </article>
           </div>
         </section>
 
@@ -210,12 +236,13 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
             </section>
 
             <section class="lead-box" aria-labelledby="lead-title">
-              <h3 id="lead-title">Get the survival file</h3>
-              <p id="lead-copy" class="ai-copy">Get the Self-Sustaining Nomad Setup Checklist.</p>
-              <form class="lead-form">
-                <input type="email" aria-label="Email address" placeholder="you@example.com" />
-                <button id="lead-button" class="secondary-button" type="submit">Send me the checklist</button>
-              </form>
+              <h3 id="lead-title">Launch note</h3>
+              <p id="lead-copy" class="ai-copy">
+                NomadBurn is built for remote workers, freelancers, and indie hackers deciding where
+                their money lasts longest. The calculator works without an account; the checklist is
+                being shaped from early user feedback.
+              </p>
+              <a class="secondary-link" href="/methodology/">Read the planning methodology</a>
             </section>
 
             <p class="disclaimer">
@@ -259,7 +286,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
       import { calculateBurn } from "../lib/calculateBurn";
       import type { BurnInputs, IncomeStability, IncomeTaxMode } from "../lib/calculateBurn";
       import type { AccommodationStyle, Destination } from "../data/cities";
-      import { estimateRunwayEndDate, getLeadMagnet, getRiskProfile } from "../lib/risk";
+      import { estimateRunwayEndDate, getRiskProfile } from "../lib/risk";
 
       const requiredElement = <T extends Element>(selector: string): T => {
         const element = document.querySelector<T>(selector);
@@ -313,7 +340,6 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         const inputs = readInputs();
         const result = calculateBurn(inputs);
         const risk = getRiskProfile(result.runwayMonths);
-        const lead = getLeadMagnet(result.runwayMonths);
 
         setText("burn-rate", `${money.format(result.burnRate)} / month`);
         setText(
@@ -340,8 +366,6 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         setText("payment-loss", money.format(result.paymentLoss));
         setText("cashflow", money.format(result.monthlyNetCashflow));
         setText("risk-helper", risk.helper);
-        setText("lead-copy", lead.title);
-        setText("lead-button", lead.button);
 
         const pill = byId("risk-pill");
         pill.textContent = risk.label;
