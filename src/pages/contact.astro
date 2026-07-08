@@ -1,0 +1,53 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Contact NomadBurn | Corrections, Feedback, and Support";
+const description =
+  "Contact NomadBurn for cost corrections, city suggestions, calculator feedback, privacy questions, and support.";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/contact/">
+  <section class="content-hero">
+    <p class="eyebrow">Contact</p>
+    <h1>Send corrections, feedback, or city requests.</h1>
+    <p class="subtitle">
+      NomadBurn is most useful when the assumptions stay transparent. If a cost range looks stale,
+      a city page needs context, or the calculator behaves oddly, send the details.
+    </p>
+  </section>
+
+  <section class="content-grid">
+    <article class="content-panel wide">
+      <h2>Email</h2>
+      <p>
+        For feedback, corrections, privacy questions, or support, email
+        <a href="mailto:hello@nomadburn.com">hello@nomadburn.com</a>.
+      </p>
+      <div class="formula-box">
+        <strong>For cost corrections</strong>
+        <span>
+          Include the city, the number that looks wrong, a source link, and whether the source is a
+          monthly rental, daily stay, coworking pass, grocery estimate, or personal anecdote.
+        </span>
+      </div>
+    </article>
+
+    <aside class="content-panel">
+      <h2>Useful details</h2>
+      <ul class="plain-list">
+        <li>The page URL.</li>
+        <li>Your browser and device if reporting a bug.</li>
+        <li>The city and neighborhood if reporting a cost issue.</li>
+        <li>Whether your feedback is about calculator math, content, privacy, or accessibility.</li>
+      </ul>
+    </aside>
+  </section>
+
+  <section class="content-panel">
+    <h2>Response expectations</h2>
+    <p>
+      NomadBurn is a small independent project, so replies may not be immediate. High-signal cost
+      corrections, broken page reports, privacy requests, and accessibility issues get priority.
+    </p>
+  </section>
+</BaseLayout>

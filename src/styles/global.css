@@ -529,6 +529,26 @@ select:focus {
   padding: 28px 0 40px;
   color: var(--muted);
   font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.footer a,
+.content-panel p a {
+  color: var(--accent-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.footer a:hover,
+.content-panel p a:hover {
+  text-decoration: underline;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .content-hero {

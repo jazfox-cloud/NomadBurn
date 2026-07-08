@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const title = "Privacy Policy | NomadBurn";
+const description =
+  "NomadBurn privacy policy covering calculator inputs, optional AI diagnosis, logs, cookies, analytics, and contact requests.";
+---
+
+<BaseLayout title={title} description={description} canonicalPath="/privacy-policy/">
+  <section class="content-hero">
+    <p class="eyebrow">Privacy policy</p>
+    <h1>Privacy Policy</h1>
+    <p class="subtitle">
+      Last updated July 8, 2026. NomadBurn is designed to work without an account, payment flow, or
+      required signup.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>Information you provide</h2>
+    <p>
+      The calculator asks for planning inputs such as savings, income, destination, accommodation
+      style, tax reserve, payment loss, and fixed costs. The basic calculator runs in your browser
+      and does not require you to create an account.
+    </p>
+    <p>
+      If you contact NomadBurn by email, we receive the information you choose to send, such as your
+      email address, message, page URL, cost correction, or support request.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>Optional AI diagnosis</h2>
+    <p>
+      If you choose to run the optional AI diagnosis, the calculator payload and result are sent to a
+      Cloudflare Pages Function so the diagnosis can be generated. When an AI provider key is
+      configured, that function may send the payload to Google Gemini to produce the response. If the
+      provider is unavailable, NomadBurn falls back to a local non-AI diagnosis.
+    </p>
+    <p>
+      Do not enter sensitive personal data into the calculator. Use rounded planning numbers instead
+      of exact account balances or private financial details.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>Logs, cookies, and analytics</h2>
+    <p>
+      NomadBurn is hosted on Cloudflare Pages. Cloudflare may process standard request information
+      such as IP address, user agent, URLs requested, timestamps, and security signals to operate and
+      protect the site.
+    </p>
+    <p>
+      NomadBurn does not currently require login cookies, advertising cookies, or payment cookies.
+      If analytics, email capture, or paid products are added later, this policy should be updated
+      before those features are used.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>How information is used</h2>
+    <ul class="plain-list">
+      <li>To operate the calculator and optional AI diagnosis.</li>
+      <li>To respond to emails, corrections, privacy requests, and support messages.</li>
+      <li>To improve city assumptions, page quality, accessibility, and site reliability.</li>
+      <li>To protect the site from abuse, spam, or technical attacks.</li>
+    </ul>
+  </section>
+
+  <section class="content-panel">
+    <h2>Contact</h2>
+    <p>
+      For privacy questions or deletion requests related to messages you sent, email
+      <a href="mailto:hello@nomadburn.com">hello@nomadburn.com</a>.
+    </p>
+  </section>
+</BaseLayout>
