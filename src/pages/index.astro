@@ -159,6 +159,29 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
                   />
                 </div>
                 <div class="field full">
+                  <label class="toggle-row" for="includeLocalCostVariability">
+                    <input
+                      id="includeLocalCostVariability"
+                      name="includeLocalCostVariability"
+                      type="checkbox"
+                    />
+                    <span>
+                      Add local cost variability
+                      <small>Stress-test SIM/data and coworking day-pass swings before the move feels too smooth.</small>
+                    </span>
+                  </label>
+                </div>
+                <div id="variability-fields" class="field-grid nested-fields is-hidden">
+                  <div class="field">
+                    <label for="localSimDataSwing">Local SIM / data swing (USD / month)</label>
+                    <input id="localSimDataSwing" name="localSimDataSwing" type="number" min="0" value="25" />
+                  </div>
+                  <div class="field">
+                    <label for="coworkingDayPassSwing">Coworking day-pass swing (USD / visit)</label>
+                    <input id="coworkingDayPassSwing" name="coworkingDayPassSwing" type="number" min="0" value="3" />
+                  </div>
+                </div>
+                <div class="field full">
                   <label for="flightVisaBuffer">Monthly flight / visa buffer (USD)</label>
                   <input id="flightVisaBuffer" name="flightVisaBuffer" type="number" min="0" value="150" />
                 </div>
@@ -220,6 +243,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
               <div class="breakdown-grid">
                 <div class="breakdown-row"><span>Estimated rent</span><strong id="rent">$0</strong></div>
                 <div class="breakdown-row"><span>Coworking / cafe</span><strong id="coworking">$0</strong></div>
+                <div class="breakdown-row"><span>Local variability buffer</span><strong id="local-variability-buffer">$0</strong></div>
                 <div class="breakdown-row"><span>Total living cost</span><strong id="living-cost">$0</strong></div>
                 <div class="breakdown-row"><span>Tax reserve</span><strong id="tax-reserve">$0</strong></div>
                 <div class="breakdown-row"><span>Payment loss</span><strong id="payment-loss">$0</strong></div>
@@ -305,6 +329,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
       };
 
       const form = requiredElement<HTMLFormElement>("#burn-form");
+      const variabilityFields = requiredElement<HTMLElement>("#variability-fields");
       const diagnoseButton = requiredElement<HTMLButtonElement>("#diagnose-button");
       const diagnosisOutput = requiredElement<HTMLElement>("#diagnosis-output");
       const diagnoseButtonLabel = "Explain my burn rate";
@@ -325,6 +350,10 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
       };
 
       const numberValue = (name: string): number => Number(field(name).value || 0);
+      const checkedValue = (name: string): boolean => {
+        const input = field(name);
+        return input instanceof HTMLInputElement && input.checked;
+      };
 
       const readInputs = (): BurnInputs => ({
         currentSavings: numberValue("currentSavings"),
@@ -335,6 +364,9 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         destination: field("destination").value as Destination,
         accommodationStyle: field("accommodationStyle").value as AccommodationStyle,
         coworkingFreqPerWeek: numberValue("coworkingFreqPerWeek"),
+        includeLocalCostVariability: checkedValue("includeLocalCostVariability"),
+        localSimDataSwing: numberValue("localSimDataSwing"),
+        coworkingDayPassSwing: numberValue("coworkingDayPassSwing"),
         flightVisaBuffer: numberValue("flightVisaBuffer"),
         paymentLossPct: numberValue("paymentLossPct"),
         incomeStability: field("incomeStability").value as IncomeStability,
@@ -349,6 +381,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         const inputs = readInputs();
         const result = calculateBurn(inputs);
         const risk = getRiskProfile(result.runwayMonths);
+        variabilityFields.classList.toggle("is-hidden", !inputs.includeLocalCostVariability);
 
         setText("burn-rate", `${money.format(result.burnRate)} / month`);
         setText(
@@ -370,6 +403,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         setText("break-even", `${money.format(result.breakEvenIncome)} / month`);
         setText("rent", money.format(result.rent));
         setText("coworking", money.format(result.coworkingCost));
+        setText("local-variability-buffer", money.format(result.localVariabilityBuffer));
         setText("living-cost", money.format(result.monthlyLivingCost));
         setText("tax-reserve", money.format(result.taxReserve));
         setText("payment-loss", money.format(result.paymentLoss));

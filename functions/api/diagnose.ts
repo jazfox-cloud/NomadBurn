@@ -80,6 +80,8 @@ function localDiagnosis(payload: any): string {
   const burnRate = Math.round(Number(result.burnRate || 0));
   const runway = Number(result.runwayMonths);
   const runwayCopy = Number.isFinite(runway) ? `${runway.toFixed(1)} months` : "infinite runway";
+  const hasLocalVariability = Boolean(inputs.includeLocalCostVariability);
+  const localVariabilityBuffer = Math.round(Number(result.localVariabilityBuffer || 0));
 
   return `## The Verdict
 ${burnRate > 0 ? `Your ${destination} plan is burning about $${burnRate}/month, which gives you ${runwayCopy} to make the math behave.` : `Your ${destination} setup is cashflow-positive, so the job is keeping it boring and repeatable.`}
@@ -87,11 +89,12 @@ ${burnRate > 0 ? `Your ${destination} plan is burning about $${burnRate}/month, 
 ## Hidden Friction
 - Payment loss and tax reserve are silent leaks because they hit income before lifestyle spending even begins.
 - Housing style is the biggest lever. A nicer apartment can quietly eat the whole geo-arbitrage advantage.
+- ${hasLocalVariability ? `Local variability is adding about $${localVariabilityBuffer}/month for SIM/data and coworking day-pass swings.` : "Local variability is off, so the result is a steadier base case."}
 - Timezone drag becomes a money problem when it lowers billable energy or client responsiveness.
 
 ## Do This Now
 1. Put tax reserve and payment loss in separate line items before you touch lifestyle upgrades.
-2. Price one cheaper housing option in ${destination} today and compare the runway change.
+2. Check one real local SIM plan and two coworking day-pass prices in ${destination}, then rerun the calculator with local variability on.
 3. Set a minimum monthly income target equal to your break-even number plus a 10% buffer.`;
 }
 
@@ -105,7 +108,7 @@ Output STRICTLY in this structure, under 300 words total:
 One punchy sentence about the user's situation. Direct, clear, slightly witty.
 
 ## Hidden Friction
-2-3 bullet points explaining what is silently draining them. Focus on payment loss, tax reserve, accommodation style, and timezone exhaustion.
+2-3 bullet points explaining what is silently draining them. Focus on payment loss, tax reserve, accommodation style, local SIM and coworking day-pass swings, and timezone exhaustion.
 
 ## Do This Now
 3 concrete numbered actions. Each action must be specific enough to do today.

@@ -24,7 +24,9 @@ const description =
         Each city estimate starts with a monthly base living cost, then adds one accommodation
         style, coworking or cafe work sessions, fixed costs, and a travel or visa buffer. The
         calculator then adjusts income for tax reserve and payment loss before estimating monthly
-        burn, runway, and break-even income.
+        burn, runway, and break-even income. The optional local variability toggle lets you add
+        your own SIM/data monthly swing and coworking day-pass swing, which can move more than the
+        calm default estimate in cities such as Mexico City or Lisbon.
       </p>
       <div class="formula-box">
         <strong>Sample setup</strong>
@@ -71,8 +73,24 @@ const description =
       <li>Use your actual post-tax income, or add a tax reserve if income is not already taxed.</li>
       <li>Add fixed costs that follow you abroad: insurance, software, subscriptions, debt, storage, and phone plans.</li>
       <li>Estimate payment friction: card fees, transfer fees, currency conversion, and platform withdrawal loss.</li>
+      <li>Turn on local variability if SIM plans, cafe minimums, or coworking day passes are not stable month to month.</li>
       <li>Add a travel buffer for visas, flights, border runs, and emergency location changes.</li>
     </ol>
+  </section>
+
+  <section class="content-panel">
+    <h2>Local variability formula</h2>
+    <p>
+      The calculator keeps this stress test deliberately simple. It does not maintain a live SIM or
+      coworking price database. Instead, you can add your own monthly swing assumptions when a city
+      feels less predictable than the base estimate.
+    </p>
+    <div class="formula-box">
+      <strong>Variability buffer</strong>
+      <span>
+        SIM/data monthly swing + coworking visits per week * 4.33 * coworking day-pass swing.
+      </span>
+    </div>
   </section>
 
   <section class="content-panel faq">

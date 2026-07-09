@@ -13,6 +13,9 @@ export type BurnInputs = {
   destination: Destination;
   accommodationStyle: AccommodationStyle;
   coworkingFreqPerWeek: number;
+  includeLocalCostVariability: boolean;
+  localSimDataSwing: number;
+  coworkingDayPassSwing: number;
   flightVisaBuffer: number;
   paymentLossPct: number;
   incomeStability: IncomeStability;
@@ -22,6 +25,7 @@ export type BurnInputs = {
 export type BurnResult = {
   rent: number;
   coworkingCost: number;
+  localVariabilityBuffer: number;
   monthlyLivingCost: number;
   taxReserve: number;
   paymentLoss: number;
@@ -42,10 +46,14 @@ export function calculateBurn(inputs: BurnInputs): BurnResult {
   }[inputs.accommodationStyle];
 
   const coworkingCost = city.coworkingCost * inputs.coworkingFreqPerWeek * 4.33;
+  const localVariabilityBuffer = inputs.includeLocalCostVariability
+    ? inputs.localSimDataSwing + inputs.coworkingFreqPerWeek * 4.33 * inputs.coworkingDayPassSwing
+    : 0;
   const monthlyLivingCost =
     city.baseLivingCost +
     rent +
     coworkingCost +
+    localVariabilityBuffer +
     inputs.monthlyFixedCosts +
     inputs.flightVisaBuffer;
 
@@ -68,6 +76,7 @@ export function calculateBurn(inputs: BurnInputs): BurnResult {
   return {
     rent,
     coworkingCost,
+    localVariabilityBuffer,
     monthlyLivingCost,
     taxReserve,
     paymentLoss,

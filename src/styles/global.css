@@ -306,10 +306,46 @@ select {
   outline: none;
 }
 
+input[type="checkbox"] {
+  width: 18px;
+  min-height: 18px;
+  accent-color: var(--accent);
+}
+
 input:focus,
 select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(228, 84, 46, 0.14);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #dce5df;
+  border-radius: 8px;
+  background: #f8fbf9;
+  padding: 12px;
+}
+
+.toggle-row span {
+  display: grid;
+  gap: 3px;
+}
+
+.toggle-row small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.nested-fields {
+  grid-column: 1 / -1;
+}
+
+.is-hidden {
+  display: none;
 }
 
 .hint-row {
