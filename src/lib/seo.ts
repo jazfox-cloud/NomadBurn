@@ -41,5 +41,5 @@ export function cityPath(city: Destination): string {
 }
 
 export function cityMetaDescription(city: Destination): string {
-  return `Estimate your digital nomad burn rate in ${cityLabel(city)}. Compare rough 2026 planning costs for coliving, Airbnb, hostel stays, coworking, and monthly runway.`;
+  return `Estimate your digital nomad burn rate in ${cityLabel(city)}. Compare rough 2026 planning estimates for coliving, Airbnb, hostel stays, coworking, and monthly runway.`;
 }

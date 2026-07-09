@@ -5,7 +5,7 @@ import { cityPath, money, monthlyCostFor } from "../../lib/seo";
 
 const title = "Digital Nomad City Burn Rate Guides | NomadBurn";
 const description =
-  "Browse digital nomad burn rate estimates by city, including rough 2026 planning costs for rent, living expenses, coworking, and runway.";
+  "Browse digital nomad burn rate planning estimates by city, including broader Europe coverage and rough 2026 costs for rent, living expenses, coworking, and runway.";
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/cities/">
@@ -13,8 +13,9 @@ const description =
     <p class="eyebrow">City burn guides</p>
     <h1>Digital nomad burn rate by city</h1>
     <p class="subtitle">
-      Pick a city to see rough planning costs and understand how rent, lifestyle, coworking, and
-      travel buffers change the monthly burn.
+      Pick a city to see rough 2026 planning estimates and understand how rent, lifestyle,
+      coworking, and travel buffers change the monthly burn. Europe coverage now includes Lisbon,
+      Tbilisi, Budapest, Prague, Warsaw, Belgrade, Sofia, and Bucharest.
     </p>
   </section>
 
@@ -31,7 +32,7 @@ const description =
           />
           <h2><a href={cityPath(city)}>{cityLabel(city)}</a></h2>
           <p>
-            Sample coliving setup: <strong>{money(monthlyCostFor(city))} / month</strong>.
+            Planning estimate for a sample coliving setup: <strong>{money(monthlyCostFor(city))} / month</strong>.
           </p>
           <dl>
             <div>

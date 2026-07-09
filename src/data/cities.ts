@@ -2,11 +2,17 @@ export type Destination =
   | "Chiang Mai"
   | "Bali Canggu"
   | "Lisbon"
+  | "Tbilisi"
+  | "Budapest"
+  | "Prague"
+  | "Warsaw"
+  | "Belgrade"
+  | "Sofia"
+  | "Bucharest"
   | "Medellin"
   | "Mexico City"
   | "Ho Chi Minh City"
   | "Bangkok"
-  | "Tbilisi"
   | "Da Nang"
   | "Buenos Aires";
 
@@ -50,6 +56,55 @@ export const cities: Record<Destination, CityCost> = {
     hostelRent: 500,
     coworkingCost: 4,
   },
+  Tbilisi: {
+    baseLivingCost: 550,
+    colivingRent: 450,
+    airbnbRent: 650,
+    hostelRent: 300,
+    coworkingCost: 3,
+  },
+  Budapest: {
+    baseLivingCost: 750,
+    colivingRent: 650,
+    airbnbRent: 950,
+    hostelRent: 400,
+    coworkingCost: 4,
+  },
+  Prague: {
+    baseLivingCost: 850,
+    colivingRent: 750,
+    airbnbRent: 1100,
+    hostelRent: 450,
+    coworkingCost: 5,
+  },
+  Warsaw: {
+    baseLivingCost: 800,
+    colivingRent: 700,
+    airbnbRent: 1000,
+    hostelRent: 450,
+    coworkingCost: 5,
+  },
+  Belgrade: {
+    baseLivingCost: 650,
+    colivingRent: 550,
+    airbnbRent: 800,
+    hostelRent: 350,
+    coworkingCost: 4,
+  },
+  Sofia: {
+    baseLivingCost: 600,
+    colivingRent: 500,
+    airbnbRent: 750,
+    hostelRent: 320,
+    coworkingCost: 4,
+  },
+  Bucharest: {
+    baseLivingCost: 650,
+    colivingRent: 550,
+    airbnbRent: 800,
+    hostelRent: 350,
+    coworkingCost: 4,
+  },
   Medellin: {
     baseLivingCost: 600,
     colivingRent: 500,
@@ -78,13 +133,6 @@ export const cities: Record<Destination, CityCost> = {
     hostelRent: 350,
     coworkingCost: 5,
   },
-  Tbilisi: {
-    baseLivingCost: 550,
-    colivingRent: 450,
-    airbnbRent: 650,
-    hostelRent: 300,
-    coworkingCost: 3,
-  },
   "Da Nang": {
     baseLivingCost: 500,
     colivingRent: 400,
@@ -107,11 +155,17 @@ export const citySlugs: Record<Destination, string> = {
   "Chiang Mai": "chiang-mai",
   "Bali Canggu": "bali-canggu",
   Lisbon: "lisbon",
+  Tbilisi: "tbilisi",
+  Budapest: "budapest",
+  Prague: "prague",
+  Warsaw: "warsaw",
+  Belgrade: "belgrade",
+  Sofia: "sofia",
+  Bucharest: "bucharest",
   Medellin: "medellin",
   "Mexico City": "mexico-city",
   "Ho Chi Minh City": "ho-chi-minh-city",
   Bangkok: "bangkok",
-  Tbilisi: "tbilisi",
   "Da Nang": "da-nang",
   "Buenos Aires": "buenos-aires",
 };
@@ -120,11 +174,17 @@ export const cityCountries: Record<Destination, string> = {
   "Chiang Mai": "Thailand",
   "Bali Canggu": "Indonesia",
   Lisbon: "Portugal",
+  Tbilisi: "Georgia",
+  Budapest: "Hungary",
+  Prague: "Czech Republic",
+  Warsaw: "Poland",
+  Belgrade: "Serbia",
+  Sofia: "Bulgaria",
+  Bucharest: "Romania",
   Medellin: "Colombia",
   "Mexico City": "Mexico",
   "Ho Chi Minh City": "Vietnam",
   Bangkok: "Thailand",
-  Tbilisi: "Georgia",
   "Da Nang": "Vietnam",
   "Buenos Aires": "Argentina",
 };
@@ -177,6 +237,36 @@ export const cityImages: Record<Destination, { src: string; alt: string; creditH
     src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg/960px-View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg",
     alt: "View of Tbilisi from Tabori Church",
     creditHref: "https://en.wikipedia.org/wiki/Tbilisi",
+  },
+  Budapest: {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/View_from_Gell%C3%A9rt_Hill_to_the_Danube%2C_Hungary_-_Budapest_%2828493220635%29.jpg/960px-View_from_Gell%C3%A9rt_Hill_to_the_Danube%2C_Hungary_-_Budapest_%2828493220635%29.jpg",
+    alt: "Budapest and the Danube from Gellert Hill",
+    creditHref: "https://en.wikipedia.org/wiki/Budapest",
+  },
+  Prague: {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Prague_%286365119737%29.jpg/960px-Prague_%286365119737%29.jpg",
+    alt: "Prague city panorama with Charles Bridge and Prague Castle",
+    creditHref: "https://en.wikipedia.org/wiki/Prague",
+  },
+  Warsaw: {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Aleja_Niepdleglosci_Warsaw_2022_aerial_%28cropped%29.jpg/960px-Aleja_Niepdleglosci_Warsaw_2022_aerial_%28cropped%29.jpg",
+    alt: "Warsaw skyline aerial view",
+    creditHref: "https://en.wikipedia.org/wiki/Warsaw",
+  },
+  Belgrade: {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Panorama_Belgrad.jpg/960px-Panorama_Belgrad.jpg",
+    alt: "Panorama of Belgrade with the Church of Saint Sava",
+    creditHref: "https://en.wikipedia.org/wiki/Belgrade",
+  },
+  Sofia: {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Russian_church_%2837591925970%29.jpg/960px-Russian_church_%2837591925970%29.jpg",
+    alt: "Central Sofia and Vitosha Mountain panorama",
+    creditHref: "https://en.wikipedia.org/wiki/Sofia",
+  },
+  Bucharest: {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Bucharest_University_Square_%28cropped%29.jpg/960px-Bucharest_University_Square_%28cropped%29.jpg",
+    alt: "Bucharest University Square city view",
+    creditHref: "https://en.wikipedia.org/wiki/Bucharest",
   },
   "Da Nang": {
     src: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Dragon_Bridge%2C_Da_Nang_during_day_-_20230819_%28cropped%29.jpg",
