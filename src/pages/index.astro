@@ -228,12 +228,12 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
             </section>
 
             <section class="ai-box" aria-labelledby="ai-title">
-              <h3 id="ai-title">AI CFO Diagnosis</h3>
+              <h3 id="ai-title">Runway advice</h3>
               <p class="ai-copy">
-                The calculator is instant. The AI diagnosis is optional and will focus on hidden
-                friction, not repeating the math you already see.
+                Turn the numbers into a quick second opinion: what is working, what is quietly
+                leaking money, and what to check next.
               </p>
-              <button id="diagnose-button" class="primary-button" type="button">Run AI diagnosis</button>
+              <button id="diagnose-button" class="primary-button" type="button">Explain my burn rate</button>
               <div id="diagnosis-output" class="diagnosis-output"></div>
             </section>
 
@@ -307,6 +307,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
       const form = requiredElement<HTMLFormElement>("#burn-form");
       const diagnoseButton = requiredElement<HTMLButtonElement>("#diagnose-button");
       const diagnosisOutput = requiredElement<HTMLElement>("#diagnosis-output");
+      const diagnoseButtonLabel = "Explain my burn rate";
 
       const money = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -392,6 +393,82 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         }
       };
 
+      type DiagnosisSection = {
+        title: string;
+        body: string[];
+      };
+
+      const normalizeHeading = (heading: string): string => {
+        const normalized = heading.replace(/^#+\s*/, "").trim().toLowerCase();
+        if (normalized.includes("verdict")) return "The verdict";
+        if (normalized.includes("friction")) return "Hidden friction";
+        if (normalized.includes("do this") || normalized.includes("next")) return "Do this now";
+        return heading.replace(/^#+\s*/, "").trim();
+      };
+
+      const parseDiagnosis = (text: string): DiagnosisSection[] => {
+        const sections: DiagnosisSection[] = [];
+        let current: DiagnosisSection | null = null;
+
+        text
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .forEach((line) => {
+            if (line.startsWith("## ")) {
+              current = { title: normalizeHeading(line), body: [] };
+              sections.push(current);
+              return;
+            }
+
+            if (!current) {
+              current = { title: "The verdict", body: [] };
+              sections.push(current);
+            }
+
+            current.body.push(line.replace(/^[-*]\s*/, "").replace(/^\d+\.\s*/, ""));
+          });
+
+        return sections.length
+          ? sections
+          : [{ title: "The verdict", body: ["The calculator worked, but the advice layer returned an empty response."] }];
+      };
+
+      const renderDiagnosis = (text: string) => {
+        const sections = parseDiagnosis(text);
+        diagnosisOutput.textContent = "";
+        diagnosisOutput.classList.add("has-diagnosis");
+
+        sections.forEach((section, index) => {
+          const card = document.createElement("article");
+          card.className = "diagnosis-card";
+
+          const kicker = document.createElement("span");
+          kicker.textContent = String(index + 1).padStart(2, "0");
+
+          const title = document.createElement("h4");
+          title.textContent = section.title;
+
+          card.append(kicker, title);
+
+          if (section.body.length > 1) {
+            const list = document.createElement("ul");
+            section.body.forEach((item) => {
+              const listItem = document.createElement("li");
+              listItem.textContent = item;
+              list.append(listItem);
+            });
+            card.append(list);
+          } else {
+            const paragraph = document.createElement("p");
+            paragraph.textContent = section.body[0] ?? "";
+            card.append(paragraph);
+          }
+
+          diagnosisOutput.append(card);
+        });
+      };
+
       let cooldownTimer = 0;
       const startCooldown = () => {
         let remaining = 30;
@@ -399,7 +476,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         diagnoseButton.textContent = `Cooling down (${remaining}s)`;
         cooldownTimer = window.setInterval(() => {
           remaining -= 1;
-          diagnoseButton.textContent = remaining > 0 ? `Cooling down (${remaining}s)` : "Run AI diagnosis";
+          diagnoseButton.textContent = remaining > 0 ? `Cooling down (${remaining}s)` : diagnoseButtonLabel;
           if (remaining <= 0) {
             window.clearInterval(cooldownTimer);
             diagnoseButton.disabled = false;
@@ -412,6 +489,7 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
         const result = calculateBurn(inputs);
         startCooldown();
         diagnosisOutput.style.display = "block";
+        diagnosisOutput.classList.remove("has-diagnosis");
         diagnosisOutput.textContent = "Drafting a sober second opinion...";
 
         try {
@@ -427,16 +505,19 @@ const featuredCities = ["Chiang Mai", "Bali Canggu", "Lisbon", "Mexico City"] as
 
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
-          diagnosisOutput.textContent = "";
+          let rawDiagnosis = "";
 
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            diagnosisOutput.textContent += decoder.decode(value, { stream: true });
+            rawDiagnosis += decoder.decode(value, { stream: true });
           }
+
+          renderDiagnosis(rawDiagnosis);
         } catch {
-          diagnosisOutput.textContent =
-            "## The Verdict\nYour calculator still works. The AI layer is unavailable right now.\n\n## Do This Now\n1. Recheck rent and fixed costs against your actual last 30 days.\n2. Keep a separate tax reserve account.\n3. Reduce payment and currency loss before changing cities.";
+          renderDiagnosis(
+            "## The Verdict\nYour calculator still works. The advice layer is unavailable right now.\n\n## Hidden Friction\n- Rent, taxes, payment fees, and fixed costs still decide whether the plan survives contact with real life.\n\n## Do This Now\n1. Recheck rent and fixed costs against your actual last 30 days.\n2. Keep a separate tax reserve account.\n3. Reduce payment and currency loss before changing cities.",
+          );
         }
       });
 
