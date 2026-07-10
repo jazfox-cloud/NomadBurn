@@ -17,6 +17,7 @@ export type Destination =
   | "Buenos Aires";
 
 export type AccommodationStyle = "coliving" | "airbnb_solo" | "hostel";
+export type CityRegion = "Asia" | "Europe" | "Americas";
 
 export type CityCost = {
   baseLivingCost: number;
@@ -187,6 +188,25 @@ export const cityCountries: Record<Destination, string> = {
   Bangkok: "Thailand",
   "Da Nang": "Vietnam",
   "Buenos Aires": "Argentina",
+};
+
+export const cityRegions: Record<Destination, CityRegion> = {
+  "Chiang Mai": "Asia",
+  "Bali Canggu": "Asia",
+  Lisbon: "Europe",
+  Tbilisi: "Europe",
+  Budapest: "Europe",
+  Prague: "Europe",
+  Warsaw: "Europe",
+  Belgrade: "Europe",
+  Sofia: "Europe",
+  Bucharest: "Europe",
+  Medellin: "Americas",
+  "Mexico City": "Americas",
+  "Ho Chi Minh City": "Asia",
+  Bangkok: "Asia",
+  "Da Nang": "Asia",
+  "Buenos Aires": "Americas",
 };
 
 export function cityLabel(city: Destination): string {

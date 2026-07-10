@@ -1,11 +1,23 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { cities, cityImages, cityLabel, destinationNames } from "../../data/cities";
+import { cities, cityImages, cityLabel, cityRegions, destinationNames } from "../../data/cities";
 import { cityPath, money, monthlyCostFor } from "../../lib/seo";
 
 const title = "Digital Nomad City Burn Rate Guides | NomadBurn";
 const description =
   "Browse digital nomad burn rate planning estimates by city, including broader Europe coverage and rough 2026 costs for rent, living expenses, coworking, and runway.";
+const regionSummaries = {
+  Asia: "Lower-burn bases with strong remote-work infrastructure and a deep cafe or coworking scene.",
+  Europe:
+    "Timezone-friendly bases for freelancers comparing Western, Central, Eastern Europe, and the Caucasus.",
+  Americas: "Useful for US-timezone overlap, longer-stay planning, and cross-border client work.",
+} as const;
+const regionOrder = ["Asia", "Europe", "Americas"] as const;
+const citiesByRegion = regionOrder.map((region) => ({
+  region,
+  summary: regionSummaries[region],
+  regionCities: destinationNames.filter((city) => cityRegions[city] === region),
+}));
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/cities/">
@@ -13,43 +25,66 @@ const description =
     <p class="eyebrow">City burn guides</p>
     <h1>Digital nomad burn rate by city</h1>
     <p class="subtitle">
-      Pick a city to see rough 2026 planning estimates and understand how rent, lifestyle,
-      coworking, and travel buffers change the monthly burn. Europe coverage now includes Lisbon,
-      Tbilisi, Budapest, Prague, Warsaw, Belgrade, Sofia, and Bucharest.
+      Compare rough 2026 planning estimates across Asia, Europe, and the Americas, then drill into
+      the city pages where rent, lifestyle, coworking, and travel buffers change the monthly burn.
     </p>
   </section>
 
-  <section class="city-grid" aria-label="City burn rate guides">
+  <nav class="region-nav" aria-label="City regions">
     {
-      destinationNames.map((city) => (
-        <article class="city-card">
-          <img
-            class="city-card-image"
-            src={cityImages[city].src}
-            alt={cityImages[city].alt}
-            loading="lazy"
-            decoding="async"
-          />
-          <h2><a href={cityPath(city)}>{cityLabel(city)}</a></h2>
-          <p>
-            Planning estimate for a sample coliving setup: <strong>{money(monthlyCostFor(city))} / month</strong>.
-          </p>
-          <dl>
-            <div>
-              <dt>Coliving</dt>
-              <dd>{money(cities[city].colivingRent)}</dd>
-            </div>
-            <div>
-              <dt>Airbnb solo</dt>
-              <dd>{money(cities[city].airbnbRent)}</dd>
-            </div>
-            <div>
-              <dt>Hostel</dt>
-              <dd>{money(cities[city].hostelRent)}</dd>
-            </div>
-          </dl>
-        </article>
+      citiesByRegion.map(({ region, regionCities }) => (
+        <a href={`#${region.toLowerCase()}`}>
+          <span>{region}</span>
+          <strong>{regionCities.length} cities</strong>
+        </a>
       ))
     }
-  </section>
+  </nav>
+
+  {
+    citiesByRegion.map(({ region, summary, regionCities }) => (
+      <section id={region.toLowerCase()} class="city-region" aria-labelledby={`${region.toLowerCase()}-title`}>
+        <div class="section-heading-row">
+          <div>
+            <p class="eyebrow">Region</p>
+            <h2 id={`${region.toLowerCase()}-title`}>{region}</h2>
+            <p>{summary}</p>
+          </div>
+        </div>
+
+        <div class="city-grid" aria-label={`${region} city burn rate guides`}>
+          {regionCities.map((city) => (
+            <article class="city-card">
+              <img
+                class="city-card-image"
+                src={cityImages[city].src}
+                alt={cityImages[city].alt}
+                loading="lazy"
+                decoding="async"
+              />
+              <h3><a href={cityPath(city)}>{cityLabel(city)}</a></h3>
+              <p>
+                Planning estimate for a sample coliving setup: <strong>{money(monthlyCostFor(city))} / month</strong>.
+              </p>
+              <p class="estimate-note">Last reviewed: July 2026. Baseline estimate, not real-time pricing.</p>
+              <dl>
+                <div>
+                  <dt>Coliving</dt>
+                  <dd>{money(cities[city].colivingRent)}</dd>
+                </div>
+                <div>
+                  <dt>Airbnb solo</dt>
+                  <dd>{money(cities[city].airbnbRent)}</dd>
+                </div>
+                <div>
+                  <dt>Hostel</dt>
+                  <dd>{money(cities[city].hostelRent)}</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))
+  }
 </BaseLayout>

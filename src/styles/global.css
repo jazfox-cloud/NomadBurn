@@ -911,6 +911,67 @@ td a:hover,
   font-size: 0.86rem;
 }
 
+.estimate-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.region-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 4px 0 24px;
+}
+
+.region-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 62px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  padding: 14px 16px;
+  text-decoration: none;
+  box-shadow: 0 12px 30px rgba(22, 31, 25, 0.05);
+}
+
+.region-nav a:hover {
+  border-color: rgba(47, 120, 88, 0.38);
+  transform: translateY(-1px);
+}
+
+.region-nav span {
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.region-nav strong {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.city-region {
+  scroll-margin-top: 24px;
+  padding: 8px 0 22px;
+}
+
+.city-region .section-heading-row {
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.city-region .section-heading-row p:not(.eyebrow) {
+  max-width: 720px;
+  color: var(--muted);
+}
+
 .city-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -918,8 +979,10 @@ td a:hover,
   padding: 12px 0 28px;
 }
 
-.city-card h2 {
+.city-card h2,
+.city-card h3 {
   font-size: 1.08rem;
+  margin: 0 0 10px;
 }
 
 .city-card-image,
@@ -1037,6 +1100,10 @@ td a:hover,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .region-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .city-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1065,6 +1132,7 @@ td a:hover,
   .cards,
   .breakdown-grid,
   .lead-form,
+  .region-nav,
   .city-grid,
   .link-grid,
   .source-list,
