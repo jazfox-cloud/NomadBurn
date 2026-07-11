@@ -1,0 +1,27 @@
+---
+type Props = {
+  user?: string;
+  domain?: string;
+};
+
+const { user = "hello", domain = "nomadburn.com" } = Astro.props;
+const fallback = `${user} [at] ${domain}`;
+---
+
+<a class="email-link" data-user={user} data-domain={domain} href="#">
+  {fallback}
+</a>
+<script is:inline>
+  const script = document.currentScript;
+  const link = script?.previousElementSibling;
+
+  if (link instanceof HTMLAnchorElement) {
+    const user = link.dataset.user ?? "";
+    const domain = link.dataset.domain ?? "";
+    const address = `${user}@${domain}`;
+
+    link.href = `mailto:${address}`;
+    link.textContent = address;
+    link.setAttribute("aria-label", `Email ${address}`);
+  }
+</script>
