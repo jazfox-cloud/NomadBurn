@@ -654,6 +654,17 @@ select:focus {
   margin-top: 10px;
 }
 
+.footer-badge {
+  display: inline-flex;
+  margin-top: 18px;
+}
+
+.footer-badge img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 .content-hero {
   display: grid;
   gap: 18px;
