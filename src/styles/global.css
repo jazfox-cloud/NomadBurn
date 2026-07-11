@@ -151,31 +151,6 @@ h1 {
   gap: 10px;
 }
 
-.product-hunt-badge {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  position: absolute;
-  top: 206px;
-  right: 0;
-  border-radius: 7px;
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease;
-}
-
-.product-hunt-badge:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.product-hunt-badge img {
-  display: block;
-  width: 214px;
-  max-width: calc(100vw - 46px);
-  height: auto;
-}
-
 .ghost-button {
   display: inline-flex;
   width: fit-content;
@@ -654,9 +629,16 @@ select:focus {
   margin-top: 10px;
 }
 
+.footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
 .footer-badge {
   display: inline-flex;
-  margin-top: 18px;
 }
 
 .footer-badge img {
@@ -1088,10 +1070,6 @@ td a:hover,
   .hero {
     min-height: 0;
     padding-right: 0;
-  }
-
-  .product-hunt-badge {
-    position: static;
   }
 
   .workspace,
