@@ -9,6 +9,7 @@ import {
   destinationNames,
 } from "../../data/cities";
 import { calculateBurn } from "../../lib/calculateBurn";
+import { calculatorUrl } from "../../lib/decisionContent";
 import { cityMetaDescription, cityPath, money } from "../../lib/seo";
 
 export function getStaticPaths() {
@@ -58,7 +59,7 @@ const deepDive = cityDeepDives[city];
       Estimate how a {label} nomad setup affects your monthly burn, runway, and break-even income.
       These numbers are rough 2026 planning assumptions, not live quotes.
     </p>
-    <a class="text-button" href={`/?destination=${encodeURIComponent(city)}`}>Use the live calculator</a>
+    <a class="text-button" data-event="city_page_to_calculator" href={calculatorUrl(city)}>Use the prefilled calculator</a>
   </section>
 
   <figure class="city-hero-image">
@@ -186,6 +187,10 @@ const deepDive = cityDeepDives[city];
     <h2>Compare Nearby Planning Pages</h2>
     <div class="link-grid">
       {alternativeCities.map((name) => <a href={cityPath(name)}>{cityLabel(name)} burn rate</a>)}
+      {(city === "Bali Canggu" || city === "Chiang Mai") && <a data-event="city_compare_click" href="/bali-vs-chiang-mai-digital-nomad-cost/">Bali vs Chiang Mai</a>}
+      {(city === "Lisbon" || city === "Tbilisi") && <a data-event="city_compare_click" href="/lisbon-vs-tbilisi-digital-nomad-cost/">Lisbon vs Tbilisi</a>}
+      {(city === "Bangkok" || city === "Kuala Lumpur") && <a data-event="city_compare_click" href="/bangkok-vs-kuala-lumpur-digital-nomad-cost/">Bangkok vs Kuala Lumpur</a>}
+      <a href="/best-digital-nomad-cities-under-2000/">Cities in the same budget screen</a>
     </div>
   </section>
 </BaseLayout>

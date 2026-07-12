@@ -1,0 +1,10 @@
+---
+import { DATA_UPDATED_AT, DATA_UPDATED_LABEL, decisionSources } from "../lib/decisionContent";
+---
+<div class="source-note decision-source">
+  <strong>Data last reviewed:</strong> <time datetime={DATA_UPDATED_AT}>{DATA_UPDATED_LABEL}</time>.
+  Rounded planning assumptions, not live quotes. Recheck housing, insurance, visa eligibility and exchange rates before moving.
+  <span class="source-links">
+    {decisionSources.map((source) => <a href={source.href} rel="nofollow">{source.label}</a>)}
+  </span>
+</div>

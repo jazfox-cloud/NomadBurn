@@ -1,7 +1,7 @@
 import { citySlugs, destinationNames } from "../data/cities";
 
 const site = "https://nomadburn.com";
-const lastmod = "2026-07-08";
+const lastmod = "2026-07-12";
 
 export function GET() {
   const paths = [
@@ -15,6 +15,12 @@ export function GET() {
     "/privacy-policy/",
     "/terms-of-use/",
     "/cities/",
+    "/bali-vs-chiang-mai-digital-nomad-cost/",
+    "/lisbon-vs-tbilisi-digital-nomad-cost/",
+    "/bangkok-vs-kuala-lumpur-digital-nomad-cost/",
+    "/best-digital-nomad-cities-under-2000/",
+    "/how-much-savings-before-becoming-a-digital-nomad/",
+    "/digital-nomad-runway-by-income/",
     ...destinationNames.map((city) => `/cities/${citySlugs[city]}/`),
   ];
 

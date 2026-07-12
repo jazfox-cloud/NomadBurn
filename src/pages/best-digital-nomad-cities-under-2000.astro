@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DecisionSources from "../components/DecisionSources.astro";
+import StructuredData from "../components/StructuredData.astro";
+import { destinationNames, cityLabel } from "../data/cities";
+import { calculatorUrl, decisionResult } from "../lib/decisionContent";
+import { cityPath, money } from "../lib/seo";
+const path = "/best-digital-nomad-cities-under-2000/";
+const ranked = destinationNames.map((city) => ({ city, result: decisionResult(city, 20000, 0) })).filter((item) => item.result.monthlyLivingCost < 2000).sort((a,b) => a.result.monthlyLivingCost - b.result.monthlyLivingCost);
+const bands = [{ label: "Under $1,200", max: 1200 }, { label: "Under $1,500", max: 1500 }, { label: "Under $2,000", max: 2000 }];
+const schema = { "@context": "https://schema.org", "@type": "ItemList", name: "Digital nomad cities under $2,000", itemListElement: ranked.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: cityLabel(item.city), url: `https://nomadburn.com${cityPath(item.city)}` })) };
+---
+<BaseLayout title="Digital Nomad Cities Under $2,000: Runway Ranking | NomadBurn" description="A calculation-driven ranking of digital nomad city baselines under $1,200, $1,500 and $2,000, with runway examples and calculator links." canonicalPath={path}>
+  <StructuredData data={schema} />
+  <section class="content-hero"><p class="eyebrow">Budget decision model</p><h1>Digital nomad cities under $2,000 a month</h1><p class="subtitle">A ranked planning screen based on the same comfortable coliving setup used by the calculator—not a claim that every lifestyle fits the cap.</p><DecisionSources /></section>
+  <section class="content-panel"><h2>What “under $2,000” means here</h2><p>The baseline includes coliving rent, base living costs, three coworking/cafe visits per week, $100 fixed costs, a $150 monthly flight/visa buffer, and 3% payment friction on income. It does not include personal taxes, a one-time flight, housing deposit, dependents, debt, or an emergency evacuation fund.</p></section>
+  {bands.map((band, bandIndex) => { const lower = bandIndex === 0 ? 0 : bands[bandIndex - 1].max; const cities = ranked.filter((item) => item.result.monthlyLivingCost < band.max && item.result.monthlyLivingCost >= lower); return <section class="content-panel"><h2>{band.label}</h2><div class="decision-card-grid">{cities.map((item) => <article class="decision-card"><h3><a href={cityPath(item.city)}>{cityLabel(item.city)}</a></h3><p><strong>{money(item.result.monthlyLivingCost)} / month</strong></p><p>Best for: runway-focused solo remote workers. Main risk: actual rent, seasonality and insurance can move the total.</p><p>$20,000 with no income: <strong>{item.result.runwayMonths.toFixed(1)} months</strong>.</p><a data-event="calculator_prefill_click" href={calculatorUrl(item.city, 20000, 0)}>Test this city in the calculator</a></article>)}</div></section>; })}
+  <section class="content-panel"><h2>Use the ranking as a filter, not a promise</h2><p>Start with the band that leaves at least 15–20% monthly headroom. Then verify housing, insurance, visa rules, tax treatment and an exit flight. If a city only fits at the cheapest rent assumption, it does not safely fit the budget.</p><div class="link-grid"><a href="/how-much-savings-before-becoming-a-digital-nomad/">Build a savings target</a><a href="/digital-nomad-runway-by-income/">Compare income scenarios</a><a href="/bali-vs-chiang-mai-digital-nomad-cost/">Bali vs Chiang Mai</a><a href="/lisbon-vs-tbilisi-digital-nomad-cost/">Lisbon vs Tbilisi</a></div></section>
+</BaseLayout>

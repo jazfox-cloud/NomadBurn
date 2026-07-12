@@ -1,0 +1,80 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DecisionSources from "./DecisionSources.astro";
+import StructuredData from "./StructuredData.astro";
+import type { Destination } from "../data/cities";
+import { cityLabel } from "../data/cities";
+import { calculatorUrl, costBreakdown, decisionResult, type CostBreakdown, type Lifestyle } from "../lib/decisionContent";
+import { cityPath, money } from "../lib/seo";
+
+type Props = { cityA: Destination; cityB: Destination; path: string; remoteWinner: Destination; longStayWinner: Destination };
+const { cityA, cityB, path, remoteWinner, longStayWinner } = Astro.props;
+const lifestyles: Lifestyle[] = ["budget", "comfortable", "premium"];
+const scenarios = [
+  { name: "A", savings: 10000, income: 0 },
+  { name: "B", savings: 20000, income: 1500 },
+  { name: "C", savings: 30000, income: 3000 },
+];
+const comfortableA = costBreakdown(cityA, "comfortable");
+const comfortableB = costBreakdown(cityB, "comfortable");
+const cheaper = comfortableA.total <= comfortableB.total ? cityA : cityB;
+const pricier = cheaper === cityA ? cityB : cityA;
+const title = `${cityA} vs ${cityB}: Digital Nomad Cost & Runway | NomadBurn`;
+const description = `Compare ${cityA} and ${cityB} monthly costs, three runway scenarios, break-even income, and calculator-ready planning assumptions.`;
+const faq = [
+  { q: `Is ${cityA} or ${cityB} cheaper for digital nomads?`, a: `${cheaper} is cheaper in NomadBurn's rounded comfortable baseline. Housing choice can reverse the gap, so replace the default with current quotes.` },
+  { q: "Do the totals include flights and taxes?", a: "The comparison table excludes one-time flights and personal taxes. Runway scenarios include a recurring $150 travel and visa buffer plus 3% payment friction." },
+  { q: "Are these live prices?", a: "No. They are rounded planning assumptions reviewed in July 2026 and should be verified before booking." },
+];
+const schema = [
+  { "@context": "https://schema.org", "@type": "Article", headline: title, dateModified: "2026-07-12", mainEntityOfPage: `https://nomadburn.com${path}` },
+  { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://nomadburn.com/" },
+    { "@type": "ListItem", position: 2, name: `${cityA} vs ${cityB}`, item: `https://nomadburn.com${path}` },
+  ]},
+  { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: faq.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })) },
+];
+const runwayText = (months: number) => Number.isFinite(months) ? `${months.toFixed(1)} mo` : "Break-even+";
+const costRows: [string, keyof CostBreakdown][] = [
+  ["Rent", "rent"], ["Utilities", "utilities"], ["Coworking", "coworking"], ["Food", "food"], ["Transport", "transport"], ["Mobile & internet", "mobileInternet"], ["Health insurance", "insurance"], ["Visa recurring", "visaRecurring"], ["Entertainment", "entertainment"], ["Estimated total", "total"],
+];
+---
+<BaseLayout title={title} description={description} canonicalPath={path}>
+  <StructuredData data={schema} />
+  <section class="content-hero">
+    <p class="eyebrow">City decision comparison</p>
+    <h1>{cityA} vs {cityB} digital nomad cost and runway</h1>
+    <p class="subtitle">A calculation-led comparison for choosing a base, not a generic travel guide.</p>
+    <DecisionSources />
+  </section>
+
+  <section class="content-panel verdict-panel">
+    <h2>Quick verdict</h2>
+    <p>
+      <strong>{cheaper}</strong> has the lower comfortable monthly baseline, making it the safer choice for a tight budget or a no-income runway. {pricier} can still be the better decision when its location, network, or schedule helps you protect income. For a longer stay, <strong>{longStayWinner}</strong> has the stronger planning fit; for day-to-day remote-work convenience, <strong>{remoteWinner}</strong> gets the edge. Choose {cheaper} when savings preservation is the main constraint. Choose {pricier} when you have stable income and can name the practical benefit that earns back the cost gap. In either case, verify rent first: it is the variable most likely to change the verdict.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>Monthly cost comparison</h2>
+    <div class="table-wrap"><table><thead><tr><th>Category</th>{lifestyles.flatMap((style) => [<th>{cityA}<br />{style}</th>, <th>{cityB}<br />{style}</th>])}</tr></thead>
+      <tbody>{costRows.map(([label, key]) => <tr><th>{label}</th>{lifestyles.flatMap((style) => [<td>{money(costBreakdown(cityA, style)[key])}</td>, <td>{money(costBreakdown(cityB, style)[key])}</td>])}</tr>)}</tbody>
+    </table></div>
+    <p class="source-note">The category split is an editorial allocation of the same city baseline used by the calculator. It does not create a second formula. One-time flights and personal taxes are excluded.</p>
+  </section>
+
+  <section class="content-panel">
+    <h2>Runway scenarios</h2>
+    <div class="table-wrap"><table><thead><tr><th>Scenario</th><th>{cityA}</th><th>{cityB}</th><th>Difference</th><th>Readout</th></tr></thead><tbody>
+      {scenarios.map((scenario) => { const a = decisionResult(cityA, scenario.savings, scenario.income); const b = decisionResult(cityB, scenario.savings, scenario.income); const difference = Number.isFinite(a.runwayMonths) && Number.isFinite(b.runwayMonths) ? Math.abs(a.runwayMonths - b.runwayMonths).toFixed(1) : "—"; return <tr><th>{scenario.name}: {money(scenario.savings)} saved<br />{money(scenario.income)}/mo income</th><td>{runwayText(a.runwayMonths)}<br />{money(a.monthlyNetCashflow)} cashflow</td><td>{runwayText(b.runwayMonths)}<br />{money(b.monthlyNetCashflow)} cashflow</td><td>{difference} months</td><td>{a.monthlyLivingCost > b.monthlyLivingCost ? cityA : cityB} has the higher modeled cost; rent and income create the largest swing.</td></tr>; })}
+    </tbody></table></div>
+  </section>
+
+  <section class="content-grid">
+    <article class="content-panel wide"><h2>Cost sensitivity</h2><ul class="plain-list"><li>A 10% rent increase raises burn dollar-for-dollar and reduces finite runway.</li><li>Exchange-rate moves can affect rent and daily costs; this USD model does not lock a live FX rate.</li><li>Lower income increases the monthly deficit after payment friction.</li><li>Insurance and recurring visa costs belong in fixed monthly costs if your quote differs.</li><li>Flights, deposits and relocation are one-time costs; subtract them from starting savings before comparing.</li></ul></article>
+    <aside class="content-panel"><h2>Who should choose each?</h2><p><strong>{cityA}:</strong> choose it when its community, infrastructure, timezone and quality-of-life fit justify its modeled cost.</p><p><strong>{cityB}:</strong> choose it when its budget profile and long-stay trade-offs better protect your runway.</p></aside>
+  </section>
+
+  <section class="content-panel"><h2>Calculate your own runway</h2><div class="link-grid"><a data-event="calculator_prefill_click" href={calculatorUrl(cityA)}>Calculate your own runway for {cityA}</a><a data-event="calculator_prefill_click" href={calculatorUrl(cityB)}>Calculate your own runway for {cityB}</a><a href={cityPath(cityA)}>{cityLabel(cityA)} city guide</a><a href={cityPath(cityB)}>{cityLabel(cityB)} city guide</a><a href="/best-digital-nomad-cities-under-2000/">Cities under $2,000</a><a href="/how-much-savings-before-becoming-a-digital-nomad/">Savings guide</a></div></section>
+  <section class="content-panel faq"><h2>FAQ</h2>{faq.map((item) => <><h3>{item.q}</h3><p>{item.a}</p></>)}</section>
+</BaseLayout>

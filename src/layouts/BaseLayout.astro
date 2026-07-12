@@ -41,6 +41,7 @@ const imageUrl = new URL(imagePath, "https://nomadburn.com").toString();
             <a href="/">Calculator</a>
             <a href="/nomad-runway-calculator/">Runway</a>
             <a href="/cities/">Cities</a>
+            <a href="/best-digital-nomad-cities-under-2000/">Decide</a>
             <a href="/methodology/">Methodology</a>
             <a href="/about/">About</a>
           </nav>
@@ -91,4 +92,12 @@ const imageUrl = new URL(imagePath, "https://nomadburn.com").toString();
       </div>
     </main>
   </body>
+  <script>
+    document.querySelectorAll<HTMLElement>("[data-event]").forEach((element) => element.addEventListener("click", () => {
+      const name = element.dataset.event;
+      if (!name) return;
+      window.dispatchEvent(new CustomEvent("nomadburn:event", { detail: { name } }));
+      (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.("event", name, {});
+    }));
+  </script>
 </html>

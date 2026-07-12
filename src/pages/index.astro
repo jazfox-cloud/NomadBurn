@@ -1,5 +1,6 @@
 ---
 import { cityImages, cityLabel, destinationNames } from "../data/cities";
+import StructuredData from "../components/StructuredData.astro";
 import { cityPath, monthlyCostFor, money } from "../lib/seo";
 import "../styles/global.css";
 
@@ -27,6 +28,7 @@ const cityCount = destinationNames.length;
     <meta name="twitter:image" content="https://nomadburn.com/nomadburn-og.svg" />
   </head>
   <body>
+    <StructuredData data={{ "@context": "https://schema.org", "@type": "WebApplication", name: "NomadBurn Runway Calculator", applicationCategory: "FinanceApplication", operatingSystem: "Web", url: "https://nomadburn.com/", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }} />
     <main class="page-shell">
       <div class="container">
         <header class="topbar" aria-label="Site header">
@@ -96,6 +98,17 @@ const cityCount = destinationNames.length;
 
         <section class="workspace" aria-label="NomadBurn calculator">
           <form id="burn-form" class="tool-panel">
+            <section class="form-section" aria-labelledby="presets-title">
+              <h2 id="presets-title" class="section-title">Scenario presets</h2>
+              <div class="preset-grid">
+                <button type="button" data-preset="no-income">No income</button>
+                <button type="button" data-preset="part-time">Part-time income</button>
+                <button type="button" data-preset="salary">Stable remote salary</button>
+                <button type="button" data-preset="budget">Budget lifestyle</button>
+                <button type="button" data-preset="comfortable">Comfortable lifestyle</button>
+                <button type="button" data-preset="six-month">6-month emergency runway</button>
+              </div>
+            </section>
             <section class="form-section" aria-labelledby="money-title">
               <h2 id="money-title" class="section-title">Your Money</h2>
               <div class="field-grid">
@@ -265,6 +278,20 @@ const cityCount = destinationNames.length;
               <div id="diagnosis-output" class="diagnosis-output"></div>
             </section>
 
+            <section class="lead-box" aria-labelledby="share-title">
+              <h3 id="share-title">Share this scenario</h3>
+              <p class="ai-copy">The link keeps planning inputs only. It does not include a name, email, account, or diagnosis text.</p>
+              <button id="share-button" class="primary-button" type="button">Copy result link</button>
+              <p id="share-status" class="source-note" aria-live="polite"></p>
+            </section>
+
+            <section class="breakdown" aria-labelledby="explanation-title">
+              <h3 id="explanation-title" class="section-title">How this result is calculated</h3>
+              <div class="formula-box"><strong>Runway formula</strong><span>Savings ÷ monthly deficit. If net cashflow is zero or positive, runway is shown as break-even or infinite.</span></div>
+              <p id="calculation-inputs" class="source-note"></p>
+              <p class="source-note">Not included unless you enter them: one-time relocation, deposits, emergency flights, dependents, debt, individualized tax, legal, visa, or insurance advice. City defaults reviewed July 12, 2026. Currency display is USD; no live FX conversion is applied.</p>
+            </section>
+
             <section class="lead-box" aria-labelledby="lead-title">
               <h3 id="lead-title">Launch note</h3>
               <p id="lead-copy" class="ai-copy">
@@ -366,6 +393,8 @@ const cityCount = destinationNames.length;
       const variabilityFields = requiredElement<HTMLElement>("#variability-fields");
       const diagnoseButton = requiredElement<HTMLButtonElement>("#diagnose-button");
       const diagnosisOutput = requiredElement<HTMLElement>("#diagnosis-output");
+      const shareButton = requiredElement<HTMLButtonElement>("#share-button");
+      const shareStatus = requiredElement<HTMLElement>("#share-status");
       const diagnoseButtonLabel = "Explain my burn rate";
 
       const money = new Intl.NumberFormat("en-US", {
@@ -447,11 +476,19 @@ const cityCount = destinationNames.length;
         const pill = byId("risk-pill");
         pill.textContent = risk.label;
         pill.className = `risk-pill risk-${risk.band}`;
+        setText("calculation-inputs", `Inputs used: ${money.format(inputs.currentSavings)} savings, ${money.format(inputs.monthlyIncome)} monthly income, ${inputs.destination}, ${inputs.accommodationStyle.replaceAll("_", " ")}, ${money.format(inputs.monthlyFixedCosts)} fixed costs, and ${money.format(inputs.flightVisaBuffer)} monthly travel / visa buffer.`);
+        if (!(window as Window & { __nomadburnStarted?: boolean }).__nomadburnStarted) {
+          (window as Window & { __nomadburnStarted?: boolean }).__nomadburnStarted = true;
+          track("calculator_start", { selected_city: inputs.destination });
+        }
       };
 
       const applyUrlDefaults = () => {
         const params = new URLSearchParams(window.location.search);
-        const destination = params.get("destination");
+        const slugMap = Object.fromEntries([...field("destination").querySelectorAll("option")].map((option) => [option.value.toLowerCase().replaceAll(" ", "-"), option.value]));
+        slugMap.bali = "Bali Canggu";
+        const rawCity = params.get("city");
+        const destination = params.get("destination") || (rawCity ? slugMap[rawCity.toLowerCase()] : null);
         if (destination) {
           const destinationField = field("destination") as HTMLSelectElement;
           const matchingOption = [...destinationField.options].some((option) => option.value === destination);
@@ -459,7 +496,36 @@ const cityCount = destinationNames.length;
             destinationField.value = destination;
           }
         }
+        const safeNumber = (key: string, fallback: number, max = 10000000) => { const raw = params.get(key); if (raw === null) return fallback; const value = Number(raw); return Number.isFinite(value) && value >= 0 && value <= max ? value : fallback; };
+        field("currentSavings").value = String(safeNumber("savings", numberValue("currentSavings")));
+        field("monthlyIncome").value = String(safeNumber("monthlyIncome", safeNumber("income", numberValue("monthlyIncome")), 1000000));
+        field("monthlyFixedCosts").value = String(safeNumber("monthlyExpenses", numberValue("monthlyFixedCosts"), 1000000));
+        const lifestyle = params.get("lifestyle");
+        if (lifestyle === "budget") field("accommodationStyle").value = "hostel";
+        if (lifestyle === "comfortable") field("accommodationStyle").value = "coliving";
+        if (lifestyle === "premium") field("accommodationStyle").value = "airbnb_solo";
       };
+
+      const track = (name: string, parameters: Record<string, string> = {}) => {
+        window.dispatchEvent(new CustomEvent("nomadburn:event", { detail: { name, ...parameters } }));
+        const analyticsWindow = window as Window & { gtag?: (...args: unknown[]) => void };
+        analyticsWindow.gtag?.("event", name, parameters);
+      };
+
+      const range = (value: number, breaks: number[]) => { const ceiling = breaks.find((item) => value < item); return ceiling ? `under_${ceiling}` : `${breaks.at(-1)}_plus`; };
+      const shareUrl = () => { const inputs = readInputs(); const lifestyle = inputs.accommodationStyle === "hostel" ? "budget" : inputs.accommodationStyle === "airbnb_solo" ? "premium" : "comfortable"; const params = new URLSearchParams({ city: inputs.destination.toLowerCase().replaceAll(" ", "-").replace("bali-canggu", "bali"), savings: String(inputs.currentSavings), monthlyIncome: String(inputs.monthlyIncome), monthlyExpenses: String(inputs.monthlyFixedCosts), lifestyle, currency: "USD" }); return `${window.location.origin}/?${params.toString()}#burn-form`; };
+
+      shareButton.addEventListener("click", async () => { try { await navigator.clipboard.writeText(shareUrl()); shareStatus.textContent = "Result link copied."; } catch { shareStatus.textContent = shareUrl(); } const inputs = readInputs(); const result = calculateBurn(inputs); track("result_share", { savings_range: range(inputs.currentSavings, [5000,10000,20000,50000]), income_range: range(inputs.monthlyIncome, [1000,2000,3000,5000]), runway_range: Number.isFinite(result.runwayMonths) ? range(result.runwayMonths, [3,6,12,24]) : "break_even_plus", selected_city: inputs.destination }); });
+
+      const presets: Record<string, () => void> = {
+        "no-income": () => { field("monthlyIncome").value = "0"; },
+        "part-time": () => { field("monthlyIncome").value = "1000"; field("incomeStability").value = "variable"; },
+        salary: () => { field("monthlyIncome").value = "3000"; field("incomeStability").value = "stable"; },
+        budget: () => { field("accommodationStyle").value = "hostel"; field("coworkingFreqPerWeek").value = "1"; },
+        comfortable: () => { field("accommodationStyle").value = "coliving"; field("coworkingFreqPerWeek").value = "3"; },
+        "six-month": () => { const inputs = readInputs(); const result = calculateBurn({ ...inputs, currentSavings: 0 }); field("currentSavings").value = String(Math.ceil(result.monthlyLivingCost * 6 / 100) * 100); },
+      };
+      document.querySelectorAll<HTMLButtonElement>("[data-preset]").forEach((button) => button.addEventListener("click", () => { const preset = button.dataset.preset; if (!preset || !presets[preset]) return; presets[preset](); render(); track("preset_select", { preset }); }));
 
       type DiagnosisSection = {
         title: string;
@@ -591,6 +657,7 @@ const cityCount = destinationNames.length;
 
       form.addEventListener("input", render);
       form.addEventListener("change", render);
+      form.addEventListener("change", () => { const inputs = readInputs(); const result = calculateBurn(inputs); track("calculator_complete", { savings_range: range(inputs.currentSavings, [5000,10000,20000,50000]), income_range: range(inputs.monthlyIncome, [1000,2000,3000,5000]), runway_range: Number.isFinite(result.runwayMonths) ? range(result.runwayMonths, [3,6,12,24]) : "break_even_plus", selected_city: inputs.destination }); }, { once: true });
       applyUrlDefaults();
       render();
     </script>

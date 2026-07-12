@@ -13,6 +13,7 @@ export type Destination =
   | "Mexico City"
   | "Ho Chi Minh City"
   | "Bangkok"
+  | "Kuala Lumpur"
   | "Da Nang"
   | "Buenos Aires";
 
@@ -134,6 +135,13 @@ export const cities: Record<Destination, CityCost> = {
     hostelRent: 350,
     coworkingCost: 5,
   },
+  "Kuala Lumpur": {
+    baseLivingCost: 600,
+    colivingRent: 500,
+    airbnbRent: 750,
+    hostelRent: 320,
+    coworkingCost: 3,
+  },
   "Da Nang": {
     baseLivingCost: 500,
     colivingRent: 400,
@@ -167,6 +175,7 @@ export const citySlugs: Record<Destination, string> = {
   "Mexico City": "mexico-city",
   "Ho Chi Minh City": "ho-chi-minh-city",
   Bangkok: "bangkok",
+  "Kuala Lumpur": "kuala-lumpur",
   "Da Nang": "da-nang",
   "Buenos Aires": "buenos-aires",
 };
@@ -186,6 +195,7 @@ export const cityCountries: Record<Destination, string> = {
   "Mexico City": "Mexico",
   "Ho Chi Minh City": "Vietnam",
   Bangkok: "Thailand",
+  "Kuala Lumpur": "Malaysia",
   "Da Nang": "Vietnam",
   "Buenos Aires": "Argentina",
 };
@@ -205,6 +215,7 @@ export const cityRegions: Record<Destination, CityRegion> = {
   "Mexico City": "Americas",
   "Ho Chi Minh City": "Asia",
   Bangkok: "Asia",
+  "Kuala Lumpur": "Asia",
   "Da Nang": "Asia",
   "Buenos Aires": "Americas",
 };
@@ -252,6 +263,11 @@ export const cityImages: Record<Destination, { src: string; alt: string; creditH
     src: "https://upload.wikimedia.org/wikipedia/commons/7/7d/4Y1A1159_Bangkok_%2833536795515%29.jpg",
     alt: "Bangkok city and temple view",
     creditHref: "https://en.wikipedia.org/wiki/Bangkok",
+  },
+  "Kuala Lumpur": {
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Kuala_Lumpur_Skyline_at_dusk_1.jpg/960px-Kuala_Lumpur_Skyline_at_dusk_1.jpg",
+    alt: "Kuala Lumpur skyline at dusk",
+    creditHref: "https://commons.wikimedia.org/wiki/Category:Skylines_of_Kuala_Lumpur",
   },
   Tbilisi: {
     src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg/960px-View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg",

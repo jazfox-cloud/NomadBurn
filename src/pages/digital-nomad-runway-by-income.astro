@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DecisionSources from "../components/DecisionSources.astro";
+import StructuredData from "../components/StructuredData.astro";
+import { calculateBurn } from "../lib/calculateBurn";
+import { scenarioInputs } from "../lib/decisionContent";
+import { money } from "../lib/seo";
+const incomes = [0,1000,2000,3000,5000];
+const costs = [1200,2000,3000,4000];
+const savings = 20000;
+const resultFor = (income:number, cost:number) => { const inputs = scenarioInputs("Chiang Mai", savings, income); const baseline = calculateBurn(inputs); const adjusted = calculateBurn({ ...inputs, monthlyFixedCosts: inputs.monthlyFixedCosts + cost - baseline.monthlyLivingCost }); return adjusted; };
+const runway = (value:number) => Number.isFinite(value) ? `${value.toFixed(1)} months` : "Break-even+";
+---
+<BaseLayout title="Digital Nomad Runway by Income: Interactive Scenario Table | NomadBurn" description="See how $0 to $5,000 monthly income changes a $20,000 runway across monthly cost levels from $1,200 to $4,000." canonicalPath="/digital-nomad-runway-by-income/">
+  <StructuredData data={{"@context":"https://schema.org","@type":"Article",headline:"Digital nomad runway by income",dateModified:"2026-07-12"}} />
+  <section class="content-hero"><p class="eyebrow">Income sensitivity</p><h1>Digital nomad runway by monthly income</h1><p class="subtitle">See how the same $20,000 savings balance behaves as income and monthly cost change.</p><DecisionSources /></section>
+  <section class="content-panel"><h2>Runway scenario table</h2><div class="scenario-controls"><label for="scenario-income">Highlight income</label><select id="scenario-income">{incomes.map((income)=><option value={income}>{money(income)} / month</option>)}</select></div><div class="table-wrap"><table id="income-table"><thead><tr><th>Monthly cost</th>{incomes.map((income)=><th data-income={income}>{money(income)} income</th>)}</tr></thead><tbody>{costs.map((cost)=><tr><th>{money(cost)} / month</th>{incomes.map((income)=>{const result=resultFor(income,cost);return <td data-income={income}><strong>{runway(result.runwayMonths)}</strong><br />{money(result.monthlyNetCashflow)} cashflow</td>})}</tr>)}</tbody></table></div><p class="source-note">Savings: $20,000. Payment loss: 3%. Income is assumed already taxed. The cost rows override only the modeled monthly total; the runway equation remains unchanged.</p></section>
+  <section class="content-panel"><h2>How to read it</h2><p>When net income reaches monthly cost, the model shows break-even rather than a finite savings runway. Below that line, every $100 of monthly deficit reduction extends runway. Above it, the model does not claim permanent safety: income volatility, taxes, relocation and emergencies still matter.</p><div class="link-grid"><a href="/#burn-form">Calculate with your own inputs</a><a href="/how-much-savings-before-becoming-a-digital-nomad/">Build a savings target</a><a href="/best-digital-nomad-cities-under-2000/">Compare budget cities</a></div></section>
+  <script>const select=document.querySelector<HTMLSelectElement>("#scenario-income");const cells=[...document.querySelectorAll<HTMLElement>("[data-income]")];const render=()=>{cells.forEach((cell)=>cell.classList.toggle("is-highlighted",cell.dataset.income===select?.value));window.dispatchEvent(new CustomEvent("nomadburn:event",{detail:{name:"scenario_change"}}));};select?.addEventListener("change",render);render();</script>
+</BaseLayout>
