@@ -5,6 +5,10 @@ type PagesContext = {
 
 const CANONICAL_HOST = "nomadburn.com";
 
+function isCalculatorStateUrl(url: URL): boolean {
+  return url.pathname === "/" && url.searchParams.size > 0;
+}
+
 function shouldNormalizeTrailingSlash(pathname: string): boolean {
   return (
     pathname !== "/" &&
@@ -32,5 +36,20 @@ export async function onRequest(context: PagesContext): Promise<Response> {
     return Response.redirect(url.toString(), 301);
   }
 
-  return context.next();
+  const response = await context.next();
+
+  // Calculator query parameters restore/share UI state; they do not create a
+  // separate search landing page. Keep the URL functional and crawlable while
+  // preventing each input combination from becoming an indexable duplicate.
+  if (isCalculatorStateUrl(url)) {
+    const headers = new Headers(response.headers);
+    headers.set("x-robots-tag", "noindex, follow");
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
+
+  return response;
 }

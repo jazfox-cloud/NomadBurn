@@ -40,7 +40,9 @@ const result = calculateBurn({
 });
 
 const label = cityLabel(city);
-const title = `${label} Digital Nomad Burn Rate Calculator | NomadBurn`;
+const title = city === "Ho Chi Minh City"
+  ? "Ho Chi Minh City Nomad Cost & Burn Rate | NomadBurn"
+  : `${label} Digital Nomad Burn Rate Calculator | NomadBurn`;
 const description = cityMetaDescription(city);
 const canonicalPath = cityPath(city);
 const coworkingMonthly = cost.coworkingCost * 3 * 4.33;
