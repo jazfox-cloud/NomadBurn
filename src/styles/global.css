@@ -750,6 +750,11 @@ select:focus {
   margin: 14px 0 18px;
 }
 
+.content-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .content-panel,
 .city-card {
   border: 1px solid var(--line);
@@ -854,6 +859,9 @@ select:focus {
 }
 
 .table-wrap {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 8px;

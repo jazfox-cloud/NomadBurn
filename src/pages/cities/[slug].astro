@@ -51,6 +51,7 @@ const runwayLabel = Number.isFinite(result.runwayMonths)
   ? `${result.runwayMonths.toFixed(1)} months`
   : "Infinite runway";
 const deepDive = cityDeepDives[city];
+const cityImage = cityImages[city];
 ---
 
 <BaseLayout title={title} description={description} canonicalPath={canonicalPath}>
@@ -65,9 +66,26 @@ const deepDive = cityDeepDives[city];
   </section>
 
   <figure class="city-hero-image">
-    <img src={cityImages[city].src} alt={cityImages[city].alt} decoding="async" />
+    <img
+      src={cityImage.src}
+      alt={cityImage.alt}
+      width={cityImage.width}
+      height={cityImage.height}
+      decoding="async"
+    />
     <figcaption>
-      Photo source: <a href={cityImages[city].creditHref} rel="nofollow">Wikimedia / Wikipedia</a>
+      {
+        cityImage.creditLabel ? (
+          <>
+            Photo: <a href={cityImage.creditHref} rel="nofollow">{cityImage.creditLabel}</a>
+            {cityImage.licenseHref && cityImage.licenseLabel && (
+              <> · <a href={cityImage.licenseHref} rel="nofollow">{cityImage.licenseLabel}</a></>
+            )}
+          </>
+        ) : (
+          <>Photo source: <a href={cityImage.creditHref} rel="nofollow">Wikimedia / Wikipedia</a></>
+        )
+      }
     </figcaption>
   </figure>
 

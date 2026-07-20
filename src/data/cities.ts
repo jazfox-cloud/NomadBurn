@@ -228,7 +228,18 @@ export const cityFromSlug = Object.fromEntries(
   destinationNames.map((city) => [citySlugs[city], city]),
 ) as Record<string, Destination>;
 
-export const cityImages: Record<Destination, { src: string; alt: string; creditHref: string }> = {
+type CityImage = {
+  src: string;
+  alt: string;
+  creditHref: string;
+  creditLabel?: string;
+  licenseHref?: string;
+  licenseLabel?: string;
+  width?: number;
+  height?: number;
+};
+
+export const cityImages: Record<Destination, CityImage> = {
   "Chiang Mai": {
     src: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/0020-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B4%E0%B8%87%E0%B8%AB%E0%B9%8C%E0%B8%A7%E0%B8%A3%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3.jpg/960px-0020-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B4%E0%B8%87%E0%B8%AB%E0%B9%8C%E0%B8%A7%E0%B8%A3%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3.jpg",
     alt: "Wat Phra Singh temple in Chiang Mai",
@@ -265,9 +276,14 @@ export const cityImages: Record<Destination, { src: string; alt: string; creditH
     creditHref: "https://en.wikipedia.org/wiki/Bangkok",
   },
   "Kuala Lumpur": {
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Kuala_Lumpur_Skyline_at_dusk_1.jpg/960px-Kuala_Lumpur_Skyline_at_dusk_1.jpg",
+    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Kuala_Lumpur_Skyline_at_dusk_1.jpg/960px-Kuala_Lumpur_Skyline_at_dusk_1.jpg",
     alt: "Kuala Lumpur skyline at dusk",
-    creditHref: "https://commons.wikimedia.org/wiki/Category:Skylines_of_Kuala_Lumpur",
+    creditHref: "https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Skyline_at_dusk_1.jpg",
+    creditLabel: "Walkerssk / Wikimedia Commons",
+    licenseHref: "https://creativecommons.org/publicdomain/zero/1.0/",
+    licenseLabel: "CC0 1.0",
+    width: 960,
+    height: 555,
   },
   Tbilisi: {
     src: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg/960px-View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg",

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "check:city-pages": "node scripts/check-city-page-regressions.mjs",
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
