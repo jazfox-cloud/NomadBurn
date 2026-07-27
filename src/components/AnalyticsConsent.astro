@@ -1,0 +1,123 @@
+---
+const measurementId = "G-9VT18X714X";
+---
+
+<div id="privacy-consent" class="privacy-consent" hidden>
+  <div class="privacy-consent__copy">
+    <strong>Analytics choices</strong>
+    <p>
+      NomadBurn uses Google Analytics only after consent to understand aggregate page and tool use.
+      Calculator numbers and full results are not sent.
+    </p>
+  </div>
+  <div class="privacy-consent__actions">
+    <button type="button" class="secondary-button" data-consent-reject>Reject</button>
+    <button type="button" class="primary-button" data-consent-accept>Accept analytics</button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ measurementId }}>
+  const CONSENT_STORAGE_KEY = "nomadburn_analytics_consent";
+  const PRODUCTION_HOST = "nomadburn.com";
+  const CONSENT_DENIED = {
+    analytics_storage: "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  };
+  const CONSENT_ANALYTICS_GRANTED = {
+    analytics_storage: "granted",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  };
+
+  const isProductionHost = () => window.location.hostname === PRODUCTION_HOST;
+
+  function gtag() {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(arguments);
+  }
+
+  const ensureGtag = () => {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = gtag;
+  };
+
+  const consentPanel = document.querySelector("#privacy-consent");
+  const showChoices = () => {
+    if (consentPanel instanceof HTMLElement) consentPanel.hidden = false;
+  };
+  const hideChoices = () => {
+    if (consentPanel instanceof HTMLElement) consentPanel.hidden = true;
+  };
+
+  const loadGoogleTag = () => {
+    if (!isProductionHost() || document.querySelector(`script[src*="googletagmanager.com/gtag/js?id=${measurementId}"]`)) return;
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.append(script);
+  };
+
+  const configureAnalytics = () => {
+    if (!isProductionHost() || window.__nomadburnGaConfigured) return;
+    window.__nomadburnGaConfigured = true;
+    ensureGtag();
+    gtag("consent", "update", CONSENT_ANALYTICS_GRANTED);
+    gtag("js", new Date());
+    gtag("config", measurementId, {
+      anonymize_ip: true,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+    });
+    loadGoogleTag();
+  };
+
+  const rejectAnalytics = () => {
+    localStorage.setItem(CONSENT_STORAGE_KEY, "denied");
+    ensureGtag();
+    gtag("consent", "update", CONSENT_DENIED);
+    hideChoices();
+  };
+
+  const acceptAnalytics = () => {
+    localStorage.setItem(CONSENT_STORAGE_KEY, "analytics_granted");
+    configureAnalytics();
+    hideChoices();
+  };
+
+  ensureGtag();
+  gtag("consent", "default", {
+    ...CONSENT_DENIED,
+    wait_for_update: 500,
+  });
+
+  const storedConsent = localStorage.getItem(CONSENT_STORAGE_KEY);
+  if (storedConsent === "analytics_granted") {
+    configureAnalytics();
+  } else if (storedConsent !== "denied") {
+    showChoices();
+  }
+
+  document.querySelector("[data-consent-accept]")?.addEventListener("click", acceptAnalytics);
+  document.querySelector("[data-consent-reject]")?.addEventListener("click", rejectAnalytics);
+  document.querySelectorAll("[data-privacy-choices]").forEach((element) => {
+    element.addEventListener("click", (event) => {
+      event.preventDefault();
+      showChoices();
+    });
+  });
+
+  window.addEventListener("nomadburn:event", (event) => {
+    if (!isProductionHost() || localStorage.getItem(CONSENT_STORAGE_KEY) !== "analytics_granted") return;
+    const detail = event.detail || {};
+    const { name, ...parameters } = detail;
+    if (typeof name !== "string") return;
+    ensureGtag();
+    gtag("event", name, {
+      ...parameters,
+      transport_type: "beacon",
+    });
+  });
+</script>

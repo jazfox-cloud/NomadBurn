@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import AnalyticsConsent from "../components/AnalyticsConsent.astro";
 
 type Props = {
   title: string;
@@ -56,6 +57,7 @@ const imageUrl = new URL(imagePath, "https://nomadburn.com").toString();
             <a href="/about/">About</a>
             <a href="/contact/">Contact</a>
             <a href="/privacy-policy/">Privacy</a>
+            <a href="/privacy-policy/#analytics-choices" data-privacy-choices>Privacy Choices</a>
             <a href="/terms-of-use/">Terms</a>
           </span>
           <div class="footer-badges" aria-label="NomadBurn listings">
@@ -117,13 +119,30 @@ const imageUrl = new URL(imagePath, "https://nomadburn.com").toString();
         </footer>
       </div>
     </main>
+    <AnalyticsConsent />
   </body>
   <script>
+    const slugFromHref = (href: string) => {
+      try {
+        const url = new URL(href, window.location.origin);
+        return url.pathname.replace(/^\/|\/$/g, "").replaceAll("/", "_") || "home";
+      } catch {
+        return "unknown";
+      }
+    };
+
     document.querySelectorAll<HTMLElement>("[data-event]").forEach((element) => element.addEventListener("click", () => {
       const name = element.dataset.event;
       if (!name) return;
-      window.dispatchEvent(new CustomEvent("nomadburn:event", { detail: { name } }));
-      (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.("event", name, {});
+      const anchor = element instanceof HTMLAnchorElement ? element : element.closest("a");
+      window.dispatchEvent(new CustomEvent("nomadburn:event", {
+        detail: {
+          name: "select_content",
+          content_type: name.includes("calculator") ? "calculator_link" : "internal_link",
+          content_slug: anchor ? slugFromHref(anchor.href) : name,
+          placement: name,
+        },
+      }));
     }));
   </script>
 </html>

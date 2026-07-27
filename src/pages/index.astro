@@ -1,6 +1,7 @@
 ---
 import { cityImages, cityLabel, destinationNames } from "../data/cities";
 import StructuredData from "../components/StructuredData.astro";
+import AnalyticsConsent from "../components/AnalyticsConsent.astro";
 import { cityPath, monthlyCostFor, money } from "../lib/seo";
 import "../styles/global.css";
 
@@ -341,6 +342,7 @@ const cityCount = destinationNames.length;
             <a href="/about/">About</a>
             <a href="/contact/">Contact</a>
             <a href="/privacy-policy/">Privacy</a>
+            <a href="/privacy-policy/#analytics-choices" data-privacy-choices>Privacy Choices</a>
             <a href="/terms-of-use/">Terms</a>
           </span>
           <div class="footer-badges" aria-label="NomadBurn listings">
@@ -402,6 +404,7 @@ const cityCount = destinationNames.length;
         </footer>
       </div>
     </main>
+    <AnalyticsConsent />
 
     <script>
       import { calculateBurn } from "../lib/calculateBurn";
@@ -505,10 +508,6 @@ const cityCount = destinationNames.length;
         pill.textContent = risk.label;
         pill.className = `risk-pill risk-${risk.band}`;
         setText("calculation-inputs", `Inputs used: ${money.format(inputs.currentSavings)} savings, ${money.format(inputs.monthlyIncome)} monthly income, ${inputs.destination}, ${inputs.accommodationStyle.replaceAll("_", " ")}, ${money.format(inputs.monthlyFixedCosts)} fixed costs, and ${money.format(inputs.flightVisaBuffer)} monthly travel / visa buffer.`);
-        if (!(window as Window & { __nomadburnStarted?: boolean }).__nomadburnStarted) {
-          (window as Window & { __nomadburnStarted?: boolean }).__nomadburnStarted = true;
-          track("calculator_start", { selected_city: inputs.destination });
-        }
       };
 
       const applyUrlDefaults = () => {
@@ -536,14 +535,29 @@ const cityCount = destinationNames.length;
 
       const track = (name: string, parameters: Record<string, string> = {}) => {
         window.dispatchEvent(new CustomEvent("nomadburn:event", { detail: { name, ...parameters } }));
-        const analyticsWindow = window as Window & { gtag?: (...args: unknown[]) => void };
-        analyticsWindow.gtag?.("event", name, parameters);
       };
 
-      const range = (value: number, breaks: number[]) => { const ceiling = breaks.find((item) => value < item); return ceiling ? `under_${ceiling}` : `${breaks.at(-1)}_plus`; };
+      const citySlug = (city: string) => city.toLowerCase().replaceAll(" ", "-").replace("bali-canggu", "bali");
+      const calculatorSession = { started: false, completed: false, selectedCities: new Set<string>() };
+      const markCalculatorStart = (placement: string) => {
+        if (calculatorSession.started) return;
+        calculatorSession.started = true;
+        track("calculator_start", { calculator_type: "burn_rate", currency_mode: "usd", placement });
+      };
+      const markCalculatorComplete = () => {
+        if (calculatorSession.completed) return;
+        calculatorSession.completed = true;
+        track("calculator_complete", { calculator_type: "burn_rate", result_status: "success", currency_mode: "usd" });
+      };
+      const trackCitySelection = () => {
+        const slug = citySlug(field("destination").value);
+        if (calculatorSession.selectedCities.has(slug)) return;
+        calculatorSession.selectedCities.add(slug);
+        track("select_city", { city_slug: slug, selection_context: "calculator_destination" });
+      };
       const shareUrl = () => { const inputs = readInputs(); const lifestyle = inputs.accommodationStyle === "hostel" ? "budget" : inputs.accommodationStyle === "airbnb_solo" ? "premium" : "comfortable"; const params = new URLSearchParams({ city: inputs.destination.toLowerCase().replaceAll(" ", "-").replace("bali-canggu", "bali"), savings: String(inputs.currentSavings), monthlyIncome: String(inputs.monthlyIncome), monthlyExpenses: String(inputs.monthlyFixedCosts), lifestyle, currency: "USD" }); return `${window.location.origin}/?${params.toString()}#burn-form`; };
 
-      shareButton.addEventListener("click", async () => { try { await navigator.clipboard.writeText(shareUrl()); shareStatus.textContent = "Result link copied."; } catch { shareStatus.textContent = shareUrl(); } const inputs = readInputs(); const result = calculateBurn(inputs); track("result_share", { savings_range: range(inputs.currentSavings, [5000,10000,20000,50000]), income_range: range(inputs.monthlyIncome, [1000,2000,3000,5000]), runway_range: Number.isFinite(result.runwayMonths) ? range(result.runwayMonths, [3,6,12,24]) : "break_even_plus", selected_city: inputs.destination }); });
+      shareButton.addEventListener("click", async () => { try { await navigator.clipboard.writeText(shareUrl()); shareStatus.textContent = "Result link copied."; track("share", { content_type: "calculator_result", method: "clipboard", placement: "result_panel" }); } catch { shareStatus.textContent = shareUrl(); } });
 
       const presets: Record<string, () => void> = {
         "no-income": () => { field("monthlyIncome").value = "0"; },
@@ -553,7 +567,7 @@ const cityCount = destinationNames.length;
         comfortable: () => { field("accommodationStyle").value = "coliving"; field("coworkingFreqPerWeek").value = "3"; },
         "six-month": () => { const inputs = readInputs(); const result = calculateBurn({ ...inputs, currentSavings: 0 }); field("currentSavings").value = String(Math.ceil(result.monthlyLivingCost * 6 / 100) * 100); },
       };
-      document.querySelectorAll<HTMLButtonElement>("[data-preset]").forEach((button) => button.addEventListener("click", () => { const preset = button.dataset.preset; if (!preset || !presets[preset]) return; presets[preset](); render(); track("preset_select", { preset }); }));
+      document.querySelectorAll<HTMLButtonElement>("[data-preset]").forEach((button) => button.addEventListener("click", () => { const preset = button.dataset.preset; if (!preset || !presets[preset]) return; presets[preset](); markCalculatorStart("preset"); render(); markCalculatorComplete(); track("select_content", { content_type: "calculator_preset", content_slug: preset, placement: "scenario_presets" }); }));
 
       type DiagnosisSection = {
         title: string;
@@ -683,9 +697,13 @@ const cityCount = destinationNames.length;
         }
       });
 
-      form.addEventListener("input", render);
-      form.addEventListener("change", render);
-      form.addEventListener("change", () => { const inputs = readInputs(); const result = calculateBurn(inputs); track("calculator_complete", { savings_range: range(inputs.currentSavings, [5000,10000,20000,50000]), income_range: range(inputs.monthlyIncome, [1000,2000,3000,5000]), runway_range: Number.isFinite(result.runwayMonths) ? range(result.runwayMonths, [3,6,12,24]) : "break_even_plus", selected_city: inputs.destination }); }, { once: true });
+      form.addEventListener("input", () => { markCalculatorStart("field_input"); render(); });
+      form.addEventListener("change", (event) => {
+        markCalculatorStart("field_change");
+        render();
+        markCalculatorComplete();
+        if (event.target === field("destination")) trackCitySelection();
+      });
       applyUrlDefaults();
       render();
     </script>
