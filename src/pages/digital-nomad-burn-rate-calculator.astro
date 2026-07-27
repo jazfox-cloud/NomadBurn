@@ -1,76 +1,335 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { cityLabel, destinationNames } from "../data/cities";
-import { cityPath, money, monthlyCostFor } from "../lib/seo";
+import StructuredData from "../components/StructuredData.astro";
 
-const title = "Digital Nomad Burn Rate Calculator | NomadBurn";
+const title = "Digital Nomad Burn Rate Guide and Calculator | NomadBurn";
 const description =
-  "Use NomadBurn to calculate your digital nomad burn rate, monthly runway, and break-even income before moving abroad.";
+  "Learn what digital nomad burn rate means, model your monthly burn with a focused calculator, and see how it differs from runway, break-even income, and cost of living.";
+const dateModified = "2026-07-27";
+const faq = [
+  {
+    q: "Is burn rate the same as cost of living?",
+    a: "No. Cost of living is the spending side only. Burn rate is the part of that spending that your net income does not cover.",
+  },
+  {
+    q: "Should one-time relocation costs count in burn rate?",
+    a: "Count them, but label them separately. Spread them across the first few months for planning, and subtract the full cash amount from starting savings when you build runway.",
+  },
+  {
+    q: "Can burn rate be negative?",
+    a: "A negative result means your setup is cashflow-positive. On this page the tool shows burn rate as zero and reports the monthly surplus separately.",
+  },
+];
+const scenarios = [
+  {
+    label: "Freelance designer with some client income",
+    income: 2400,
+    fixed: 650,
+    variable: 1050,
+    oneTime: 900,
+    spread: 6,
+  },
+  {
+    label: "Solo founder protecting savings during a move",
+    income: 1200,
+    fixed: 700,
+    variable: 1450,
+    oneTime: 1800,
+    spread: 6,
+  },
+].map((scenario) => {
+  const monthlyOneTime = scenario.oneTime / scenario.spread;
+  const monthlyTotal = scenario.fixed + scenario.variable + monthlyOneTime;
+  const cashflow = scenario.income - monthlyTotal;
+  const burnRate = Math.max(0, -cashflow);
+  return {
+    ...scenario,
+    monthlyOneTime,
+    monthlyTotal,
+    cashflow,
+    burnRate,
+  };
+});
+const distinctions = [
+  {
+    metric: "Burn rate",
+    meaning: "How much savings your monthly plan consumes after income.",
+    formula: "monthly obligations - monthly net income",
+    useCase: "Check whether your setup leaks cash each month.",
+  },
+  {
+    metric: "Runway",
+    meaning: "How long current savings last if burn rate stays above zero.",
+    formula: "current savings / monthly burn rate",
+    useCase: "Estimate how long you can sustain the plan.",
+  },
+  {
+    metric: "Break-even income",
+    meaning: "The monthly income that reduces burn rate to zero.",
+    formula: "monthly obligations",
+    useCase: "Set the minimum revenue target for this setup.",
+  },
+  {
+    metric: "Cost of living",
+    meaning: "The cost side of a city or lifestyle before income is applied.",
+    formula: "rent + living + work + travel + admin costs",
+    useCase: "Compare destinations before layering in income and savings.",
+  },
+];
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/digital-nomad-burn-rate-calculator/">
+  <StructuredData
+    data={{
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: "Digital nomad burn rate guide and calculator",
+      description,
+      dateModified,
+      mainEntityOfPage: "https://nomadburn.com/digital-nomad-burn-rate-calculator/",
+    }}
+  />
+  <StructuredData
+    data={{
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faq.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.a,
+        },
+      })),
+    }}
+  />
+
   <section class="content-hero">
-    <p class="eyebrow">Burn rate calculator</p>
-    <h1>Digital nomad burn rate calculator</h1>
+    <p class="eyebrow">Burn rate guide</p>
+    <h1>What digital nomad burn rate actually means</h1>
     <p class="subtitle">
-      Burn rate is the amount of money your nomad setup removes from savings each month after
-      income, tax reserve, payment loss, rent, living costs, coworking, fixed costs, and travel
-      buffers.
+      Burn rate is not a second city calculator. It is the monthly gap between what your nomad
+      setup costs and what your net income really covers after taxes, payment friction, and startup
+      travel costs.
     </p>
-    <a class="text-button" href="/">Open the calculator</a>
+    <div class="hero-actions">
+      <a class="text-button" href="#burn-rate-tool">Use the burn rate tool</a>
+      <a class="ghost-button" href="/#burn-form">Open the full runway calculator</a>
+    </div>
   </section>
 
   <section class="content-grid">
     <article class="content-panel wide">
-      <h2>What NomadBurn Calculates</h2>
+      <h2>Definition</h2>
       <p>
-        The calculator separates your monthly living cost from your monthly net income. If net
-        income is lower than the cost of the destination, the gap becomes your monthly burn rate.
-        Your runway is then estimated by dividing savings by that monthly burn.
+        Digital nomad burn rate is the amount of savings your monthly setup consumes after net
+        income. If your remote income does not fully cover rent, daily living, work costs, and
+        ongoing travel admin, the gap becomes your monthly burn rate.
       </p>
       <div class="formula-box">
-        <strong>Monthly burn</strong>
-        <span>Monthly living cost - monthly net income</span>
+        <strong>Monthly burn rate</strong>
+        <span>monthly obligations - monthly net income</span>
       </div>
-      <div class="formula-box">
-        <strong>Runway</strong>
-        <span>Current savings / monthly burn</span>
-      </div>
-      <div class="formula-box">
-        <strong>Break-even income</strong>
-        <span>Monthly living cost adjusted for tax reserve and payment loss</span>
-      </div>
+      <p>
+        When the result is zero or below, your setup is cashflow-positive. That does not mean the
+        plan is automatically safe; it means burn rate is no longer the limiting metric and you
+        should move to runway, emergency reserve, and relocation planning.
+      </p>
     </article>
 
     <aside class="content-panel">
-      <h2>Best for</h2>
+      <h2>This Page Does</h2>
       <ul class="plain-list">
-        <li>Remote workers planning a move abroad.</li>
-        <li>Freelancers with variable income.</li>
-        <li>Indie hackers comparing low-cost bases.</li>
-        <li>Nomads checking whether their current setup is leaking cash.</li>
+        <li>Explain what counts toward burn rate and what does not.</li>
+        <li>Model recurring monthly burn without rebuilding the full homepage tool.</li>
+        <li>Send you to runway, cost-of-living, or savings pages once the monthly gap is clear.</li>
       </ul>
     </aside>
   </section>
 
+  <section id="burn-rate-tool" class="content-grid burn-tool-grid">
+    <form class="tool-panel" aria-labelledby="burn-tool-title">
+      <section class="form-section" aria-labelledby="burn-tool-title">
+        <h2 id="burn-tool-title" class="section-title">Burn rate calculator</h2>
+        <div class="field-grid">
+          <div class="field">
+            <label for="monthlyNetIncome">Monthly net income (USD)</label>
+            <input id="monthlyNetIncome" name="monthlyNetIncome" type="number" min="0" value="2400" />
+          </div>
+          <div class="field">
+            <label for="fixedCosts">Fixed monthly costs (USD)</label>
+            <input id="fixedCosts" name="fixedCosts" type="number" min="0" value="650" />
+          </div>
+          <div class="field">
+            <label for="variableCosts">Variable monthly costs (USD)</label>
+            <input id="variableCosts" name="variableCosts" type="number" min="0" value="1050" />
+          </div>
+          <div class="field">
+            <label for="oneTimeCosts">One-time costs to spread (USD)</label>
+            <input id="oneTimeCosts" name="oneTimeCosts" type="number" min="0" value="900" />
+          </div>
+          <div class="field">
+            <label for="spreadMonths">Months to spread one-time costs</label>
+            <input id="spreadMonths" name="spreadMonths" type="number" min="1" value="6" />
+          </div>
+          <div class="field">
+            <label for="travelCadence">Trips or visa moves per quarter</label>
+            <input id="travelCadence" name="travelCadence" type="number" min="0" value="1" />
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section" aria-labelledby="variable-guide-title">
+        <h2 id="variable-guide-title" class="section-title">What belongs in each bucket</h2>
+        <div class="definition-grid">
+          <article class="definition-card">
+            <h3>Fixed spending</h3>
+            <p>Rent, insurance, debt, recurring software, storage, and costs back home that follow you every month.</p>
+          </article>
+          <article class="definition-card">
+            <h3>Variable spending</h3>
+            <p>Food, local transport, coworking, SIM/data, social spend, and month-to-month work friction.</p>
+          </article>
+          <article class="definition-card">
+            <h3>One-time spending</h3>
+            <p>Flights, deposits, replacement gear, visa setup, and relocation costs. Spread them only for planning, not for cash reality.</p>
+          </article>
+        </div>
+      </section>
+    </form>
+
+    <aside class="result-panel burn-result-panel" aria-live="polite">
+      <div class="result-header">
+        <div>
+          <h2>Burn summary</h2>
+          <p id="burn-summary-copy" class="ai-copy">
+            Use this focused tool to isolate the monthly gap before you move on to runway.
+          </p>
+        </div>
+        <span id="burn-summary-pill" class="risk-pill risk-comfortable">Contained</span>
+      </div>
+
+      <div class="cards burn-metric-grid">
+        <article class="metric-card">
+          <span>Monthly burn rate</span>
+          <strong id="burnRateValue">$0</strong>
+          <p id="burnRateCopy">Your savings are not being consumed by this monthly setup.</p>
+        </article>
+        <article class="metric-card">
+          <span>Total monthly obligations</span>
+          <strong id="monthlyTotalValue">$0</strong>
+          <p>Recurring spending plus the monthly share of planned one-time costs.</p>
+        </article>
+        <article class="metric-card">
+          <span>Monthly cashflow</span>
+          <strong id="cashflowValue">$0</strong>
+          <p id="cashflowCopy">Positive means the setup funds itself before longer-term reserves.</p>
+        </article>
+      </div>
+
+      <section class="breakdown" aria-labelledby="burn-breakdown-title">
+        <h3 id="burn-breakdown-title" class="section-title">Calculation breakdown</h3>
+        <div class="breakdown-grid">
+          <div class="breakdown-row"><span>Monthly net income</span><strong id="incomeValue">$0</strong></div>
+          <div class="breakdown-row"><span>Fixed monthly costs</span><strong id="fixedValue">$0</strong></div>
+          <div class="breakdown-row"><span>Variable monthly costs</span><strong id="variableValue">$0</strong></div>
+          <div class="breakdown-row"><span>Monthly share of one-time costs</span><strong id="oneTimeMonthlyValue">$0</strong></div>
+          <div class="breakdown-row"><span>Trips or visa moves / quarter</span><strong id="travelCadenceValue">0</strong></div>
+          <div class="breakdown-row"><span>Break-even income for this setup</span><strong id="breakEvenValue">$0</strong></div>
+        </div>
+      </section>
+
+      <section class="ai-box" aria-labelledby="tool-boundary-title">
+        <h3 id="tool-boundary-title">What the tool does not do</h3>
+        <p class="ai-copy">
+          It does not estimate city costs for you, choose a destination, or tell you how many months
+          your savings last. That is intentional: use this page to define the monthly leak, then use
+          the full runway and savings pages for the next decisions.
+        </p>
+        <div class="link-grid compact-links">
+          <a href="/#burn-form">Full runway calculator</a>
+          <a href="/nomad-runway-calculator/">Runway explainer</a>
+          <a href="/how-much-savings-before-becoming-a-digital-nomad/">Savings planning guide</a>
+        </div>
+      </section>
+    </aside>
+  </section>
+
   <section class="content-panel">
-    <h2>Rough Monthly Planning Estimates by City</h2>
+    <h2>Formula and data boundaries</h2>
+    <p>
+      Monthly burn rate is only as useful as the boundary around the inputs. If you treat deposits,
+      replacement gear, or visa setup as invisible, the burn rate looks better than the cash reality.
+      If you count them as permanent monthly spending forever, the burn rate looks worse than the
+      first-quarter reality.
+    </p>
+    <ol class="number-list">
+      <li>Put recurring bills in fixed or variable monthly costs.</li>
+      <li>Keep one-time relocation and setup costs separate, then spread them over the months they actually affect.</li>
+      <li>Subtract the full one-time cash amount from starting savings when you later model runway.</li>
+      <li>Recalculate after rent changes, travel cadence changes, or income drops.</li>
+    </ol>
+  </section>
+
+  <section class="content-panel">
+    <h2>Two clear example scenarios</h2>
+    <p class="source-note">
+      These are transparent planning examples, not market averages, survey data, or city price claims.
+    </p>
+    <div class="scenario-card-grid">
+      {
+        scenarios.map((scenario) => (
+          <article class="scenario-card">
+            <h3>{scenario.label}</h3>
+            <p>
+              Net income <strong>${scenario.income.toLocaleString("en-US")}</strong>, fixed costs
+              <strong> ${scenario.fixed.toLocaleString("en-US")}</strong>, variable costs
+              <strong> ${scenario.variable.toLocaleString("en-US")}</strong>, and one-time setup
+              costs <strong> ${scenario.oneTime.toLocaleString("en-US")}</strong> spread across
+              <strong> {scenario.spread} months</strong>.
+            </p>
+            <div class="formula-box">
+              <strong>Monthly obligations</strong>
+              <span>
+                ${scenario.fixed.toLocaleString("en-US")} + ${scenario.variable.toLocaleString("en-US")} + $
+                {scenario.monthlyOneTime.toLocaleString("en-US")} = $
+                {scenario.monthlyTotal.toLocaleString("en-US")}
+              </span>
+            </div>
+            <div class="formula-box">
+              <strong>Burn result</strong>
+              <span>
+                {scenario.burnRate > 0
+                  ? `Burn rate = $${scenario.burnRate.toLocaleString("en-US")} / month`
+                  : `Cashflow surplus = $${Math.abs(scenario.cashflow).toLocaleString("en-US")} / month`}
+              </span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="content-panel">
+    <h2>Burn rate vs runway vs break-even vs cost of living</h2>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>City</th>
-            <th>Coliving setup estimate</th>
-            <th>Calculator page</th>
+            <th>Metric</th>
+            <th>What it means</th>
+            <th>Formula</th>
+            <th>Best use</th>
           </tr>
         </thead>
         <tbody>
           {
-            destinationNames.map((city) => (
+            distinctions.map((item) => (
               <tr>
-                <td>{cityLabel(city)}</td>
-                <td>{money(monthlyCostFor(city))} / month</td>
-                <td><a href={cityPath(city)}>View city burn</a></td>
+                <td><strong>{item.metric}</strong></td>
+                <td>{item.meaning}</td>
+                <td>{item.formula}</td>
+                <td>{item.useCase}</td>
               </tr>
             ))
           }
@@ -78,10 +337,138 @@ const description =
       </table>
     </div>
     <p class="source-note">
-      These are rough 2026 planning assumptions, not live market prices. The comparison now covers
-      more European bases alongside Asia and the Americas. Use the estimates to pressure-test a
-      move, then replace them with your own quotes before booking housing. Read the
-      <a href="/methodology/">cost methodology</a> for the full planning model.
+      Use the <a href="/nomad-runway-calculator/">runway page</a> when the monthly burn is known
+      and you need time horizons. Use the
+      <a href="/digital-nomad-cost-of-living/"> cost-of-living comparison</a> when the destination
+      itself is still undecided.
     </p>
   </section>
+
+  <section class="content-grid">
+    <article class="content-panel wide">
+      <h2>How to use the result for savings and travel planning</h2>
+      <ol class="number-list">
+        <li>First decide whether the setup is cashflow-positive or still burning savings each month.</li>
+        <li>If burn rate is above zero, size the monthly gap before you choose a destination that locks it in.</li>
+        <li>Use the monthly gap to build a savings target, not just a vague emergency fund.</li>
+        <li>Treat frequent visa runs or relocation moves as part of the plan, not as surprise admin noise.</li>
+        <li>Only after that move to runway, because runway is downstream of burn rate.</li>
+      </ol>
+    </article>
+
+    <aside class="content-panel">
+      <h2>Next step map</h2>
+      <div class="link-grid compact-links">
+        <a href="/#burn-form">Model full runway with city inputs</a>
+        <a href="/nomad-runway-calculator/">Understand runway math</a>
+        <a href="/digital-nomad-cost-of-living/">Compare city cost baselines</a>
+        <a href="/how-much-savings-before-becoming-a-digital-nomad/">Build a savings target</a>
+      </div>
+    </aside>
+  </section>
+
+  <section class="content-panel faq">
+    <h2>Burn rate FAQ</h2>
+    {
+      faq.map((item) => (
+        <>
+          <h3>{item.q}</h3>
+          <p>{item.a}</p>
+        </>
+      ))
+    }
+  </section>
+
+  <script>
+    const money = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    });
+
+    const required = <T extends HTMLElement>(id: string): T => {
+      const element = document.getElementById(id) as T | null;
+      if (!element) throw new Error(`Missing #${id}`);
+      return element;
+    };
+
+    const numberInput = (id: string) => Number(required<HTMLInputElement>(id).value || 0);
+    const setText = (id: string, value: string) => {
+      required<HTMLElement>(id).textContent = value;
+    };
+
+    const formFields = [
+      "monthlyNetIncome",
+      "fixedCosts",
+      "variableCosts",
+      "oneTimeCosts",
+      "spreadMonths",
+      "travelCadence",
+    ].map(required);
+
+    const render = () => {
+      const monthlyNetIncome = numberInput("monthlyNetIncome");
+      const fixedCosts = numberInput("fixedCosts");
+      const variableCosts = numberInput("variableCosts");
+      const oneTimeCosts = numberInput("oneTimeCosts");
+      const spreadMonths = Math.max(1, numberInput("spreadMonths"));
+      const travelCadence = Math.max(0, numberInput("travelCadence"));
+      const monthlyOneTime = oneTimeCosts / spreadMonths;
+      const monthlyTotal = fixedCosts + variableCosts + monthlyOneTime;
+      const cashflow = monthlyNetIncome - monthlyTotal;
+      const burnRate = Math.max(0, -cashflow);
+
+      setText("burnRateValue", `${money.format(burnRate)} / month`);
+      setText("monthlyTotalValue", `${money.format(monthlyTotal)} / month`);
+      setText("cashflowValue", `${cashflow >= 0 ? "+" : "-"}${money.format(Math.abs(cashflow))}`);
+      setText("incomeValue", money.format(monthlyNetIncome));
+      setText("fixedValue", money.format(fixedCosts));
+      setText("variableValue", money.format(variableCosts));
+      setText("oneTimeMonthlyValue", money.format(monthlyOneTime));
+      setText("travelCadenceValue", String(travelCadence));
+      setText("breakEvenValue", `${money.format(monthlyTotal)} / month`);
+
+      const pill = required("burn-summary-pill");
+      if (burnRate === 0) {
+        pill.textContent = "Self-funded";
+        pill.className = "risk-pill risk-positive";
+        setText("burnRateCopy", "Your current monthly setup does not consume savings.");
+        setText(
+          "cashflowCopy",
+          "Positive cashflow still needs a reserve for travel shocks, deposits, and uneven months.",
+        );
+        setText(
+          "burn-summary-copy",
+          "Your burn rate is contained. The next decision is how resilient that surplus stays when travel or rent changes.",
+        );
+      } else if (burnRate <= 500) {
+        pill.textContent = "Contained";
+        pill.className = "risk-pill risk-manageable";
+        setText("burnRateCopy", "A modest monthly gap can still drain savings faster than expected over a long stay.");
+        setText(
+          "cashflowCopy",
+          "Negative cashflow means your setup depends on savings even before larger emergencies.",
+        );
+        setText(
+          "burn-summary-copy",
+          "The monthly leak is measurable and potentially fixable with income or cost changes before runway gets tight.",
+        );
+      } else {
+        pill.textContent = "Heavy burn";
+        pill.className = "risk-pill risk-risky";
+        setText("burnRateCopy", "This setup is consuming savings quickly enough that runway becomes the next urgent check.");
+        setText(
+          "cashflowCopy",
+          "A larger negative cashflow usually means rent, travel cadence, or income assumptions need to move.",
+        );
+        setText(
+          "burn-summary-copy",
+          "The monthly gap is large enough that destination choice, fixed costs, or income stability probably need a reset.",
+        );
+      }
+    };
+
+    formFields.forEach((field) => field.addEventListener("input", render));
+    render();
+  </script>
 </BaseLayout>

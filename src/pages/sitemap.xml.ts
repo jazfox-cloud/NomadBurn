@@ -1,7 +1,7 @@
 import { citySlugs, destinationNames } from "../data/cities";
 
 const site = "https://nomadburn.com";
-const lastmod = "2026-07-12";
+const lastmod = "2026-07-27";
 
 export function GET() {
   const paths = [

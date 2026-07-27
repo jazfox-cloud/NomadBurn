@@ -4,9 +4,9 @@ import StructuredData from "../components/StructuredData.astro";
 import { cityPath, monthlyCostFor, money } from "../lib/seo";
 import "../styles/global.css";
 
-const title = "NomadBurn | Digital Nomad Burn Rate Calculator";
+const title = "NomadBurn | Digital Nomad Runway Calculator and City Cost Planner";
 const description =
-  "Find out how long your savings last in popular nomad cities across Europe, Asia, and the Americas before you book the move.";
+  "Model digital nomad runway, monthly cashflow, and break-even income across popular remote-work cities before you book the move.";
 const featuredCities = ["Tbilisi", "Budapest", "Prague", "Warsaw"] as const;
 const cityCount = destinationNames.length;
 ---
@@ -28,7 +28,7 @@ const cityCount = destinationNames.length;
     <meta name="twitter:image" content="https://nomadburn.com/nomadburn-og.svg" />
   </head>
   <body>
-    <StructuredData data={{ "@context": "https://schema.org", "@type": "WebApplication", name: "NomadBurn Runway Calculator", applicationCategory: "FinanceApplication", operatingSystem: "Web", url: "https://nomadburn.com/", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }} />
+    <StructuredData data={{ "@context": "https://schema.org", "@type": "WebApplication", name: "NomadBurn Runway Planner", applicationCategory: "FinanceApplication", operatingSystem: "Web", url: "https://nomadburn.com/", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }} />
     <main class="page-shell">
       <div class="container">
         <header class="topbar" aria-label="Site header">
@@ -46,11 +46,11 @@ const cityCount = destinationNames.length;
         </header>
 
         <section class="hero" aria-labelledby="main-title">
-          <p class="eyebrow">Digital nomad runway calculator</p>
-          <h1 id="main-title">Calculate your digital nomad burn rate.</h1>
+          <p class="eyebrow">Digital nomad runway planner</p>
+          <h1 id="main-title">Calculate your digital nomad runway.</h1>
           <p class="subtitle">
-            Find out how long your savings last in remote-work cities across Europe, Asia, and the
-            Americas before you book the move. Free, instant, and no signup required.
+            Model monthly cashflow, runway, and break-even income across remote-work cities before
+            you book the move. Free, instant, and no signup required.
           </p>
           <div class="hero-actions" aria-label="Primary actions">
             <a class="text-button" href="#burn-form">Start with your numbers</a>
@@ -82,7 +82,7 @@ const cityCount = destinationNames.length;
               <span>01</span>
               <h3>Calculate monthly burn</h3>
               <p>Combine rent, living costs, tax reserve, fixed costs, flights, and payment loss.</p>
-              <a class="secondary-link" href="/digital-nomad-burn-rate-calculator/">Learn how burn rate works</a>
+              <a class="secondary-link" href="/digital-nomad-burn-rate-calculator/">Understand burn rate</a>
             </article>
             <article class="product-card">
               <span>02</span>
