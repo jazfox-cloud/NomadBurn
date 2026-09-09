@@ -6,6 +6,10 @@ import { cityPath, money, monthlyCostFor } from "../lib/seo";
 const title = "Digital Nomad Cost of Living Comparison | NomadBurn";
 const description =
   "Compare rough 2026 rent and living-cost estimates for digital nomad cities, then see how each destination changes monthly burn and savings runway.";
+const exampleCity = "Chiang Mai";
+const example = cities[exampleCity];
+const exampleTotal = monthlyCostFor(exampleCity);
+const exampleWorkspace = exampleTotal - example.baseLivingCost - example.colivingRent - 100 - 150;
 ---
 
 <BaseLayout title={title} description={description} canonicalPath="/digital-nomad-cost-of-living/">
@@ -21,6 +25,12 @@ const description =
 
   <section class="content-panel">
     <h2>2026 Planning Estimates, Not Live Quotes</h2>
+    <p>
+      Compare {destinationNames.length} city planning baselines in USD per month for one person.
+      The accommodation columns are alternatives: the sample total includes coliving only,
+      plus base living costs, three coworking or cafe work sessions per week, $100 in fixed
+      costs, and a $150 monthly travel or visa buffer.
+    </p>
     <div class="table-wrap">
       <table>
         <thead>
@@ -37,7 +47,11 @@ const description =
           {
             destinationNames.map((city) => (
               <tr>
-                <td><a href={cityPath(city)}>{cityLabel(city)}</a></td>
+                <td>
+                  <a href={cityPath(city)}>{cityLabel(city)}</a>
+                  <br />
+                  <a href={`/?${new URLSearchParams({ destination: city, lifestyle: "comfortable" })}#burn-form`}>Plan this city</a>
+                </td>
                 <td>{money(cities[city].baseLivingCost)}</td>
                 <td>{money(cities[city].colivingRent)}</td>
                 <td>{money(cities[city].airbnbRent)}</td>
@@ -55,6 +69,35 @@ const description =
       SIM/data, and seasonal travel can move quickly. See the
       <a href="/methodology/">NomadBurn cost methodology</a> before treating any estimate as a real
       quote.
+    </p>
+    <p>
+      “Plan this city” opens the calculator with that city and coliving selected. Review its
+      example savings, income, and other defaults before using the result for your own plan.
+      Comparing against a spending limit? See the
+      <a href="/best-digital-nomad-cities-under-2000/">city planning baselines under $2,000 a month</a>.
+    </p>
+  </section>
+
+  <section class="content-panel">
+    <h2>How the sample monthly total is calculated</h2>
+    <p>
+      Base living costs + one accommodation option + monthly coworking or cafe work costs
+      + fixed costs + travel or visa buffer. Base living is a combined planning assumption,
+      not a set of individually verified local prices.
+    </p>
+    <div class="formula-box">
+      <strong>{cityLabel(exampleCity)}: coliving example</strong>
+      <span>
+        {money(example.baseLivingCost)} base living + {money(example.colivingRent)} coliving
+        + {money(exampleWorkspace)} workspace + $100 fixed costs + $150 travel or visa buffer
+        = {money(exampleTotal)} per month.
+      </span>
+    </div>
+    <p class="source-note">
+      The workspace estimate uses three visits per week across 4.33 weeks. Displayed amounts
+      are rounded to whole dollars. This example uses the same July 2026 planning assumptions
+      as the table; it is not a current market quote. Check one-time relocation costs, housing
+      deposits, and personal expenses separately, and replace assumptions with your own quotes.
     </p>
   </section>
 
