@@ -326,7 +326,7 @@ const cityCount = destinationNames.length;
             {
               featuredCities.map((city) => (
                 <a class="featured-city" href={cityPath(city)}>
-                  <img src={cityImages[city].src} alt={cityImages[city].alt} loading="lazy" decoding="async" />
+                  <img src={cityImages[city].src} alt={cityImages[city].alt} width={cityImages[city].width} height={cityImages[city].height} loading="lazy" decoding="async" />
                   <span>{cityLabel(city)}</span>
                   <strong>{money(monthlyCostFor(city))} sample setup</strong>
                 </a>
@@ -344,6 +344,7 @@ const cityCount = destinationNames.length;
             <a href="/privacy-policy/">Privacy</a>
             <a href="/privacy-policy/#analytics-choices" data-privacy-choices>Privacy Choices</a>
             <a href="/terms-of-use/">Terms</a>
+            <a href="/images/cities/credits.txt">Photo credits</a>
             <a href="https://peerpush.com/p/nomadburn" target="_blank" rel="noopener noreferrer">NomadBurn on PeerPush</a>
           </span>
           <div class="footer-badges" aria-label="NomadBurn listings">
@@ -363,7 +364,7 @@ const cityCount = destinationNames.length;
               rel="noopener noreferrer"
             >
               <img
-                src="https://launch.ignlab.net/badge.php?slug=nomadburn"
+                src="/images/badges/ignlab-nomadburn.svg"
                 alt="NomadBurn on Ignlab Launch"
                 width="210"
                 height="54"

@@ -1,0 +1,31 @@
+NomadBurn — hosted city photograph credits
+
+The photographs below are the existing Wikimedia Commons photographs used in
+our city guides. Local files are unchanged 960px Wikimedia thumbnails; layouts
+may crop them for display. They are real location photographs, not AI images.
+
+Tbilisi: View of Tbilisi from Tabori Church
+Author: Alexey Komarov
+Source: https://commons.wikimedia.org/wiki/File:View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0/
+Local file: /images/cities/tbilisi.jpg
+
+Budapest: View from Gellért Hill to the Danube, Hungary - Budapest
+Author: Visions of Domino
+Source: https://commons.wikimedia.org/wiki/File:View_from_Gell%C3%A9rt_Hill_to_the_Danube,_Hungary_-_Budapest_(28493220635).jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0/
+Local file: /images/cities/budapest.jpg
+
+Prague: Prague, panoramic view from Charles Bridge east tower
+Author: Moyan Brenn
+Source: https://commons.wikimedia.org/wiki/File:Prague_(6365119737).jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0/
+Local file: /images/cities/prague.jpg
+
+Warsaw: Aleja Niepdleglosci Warsaw 2022 aerial (cropped)
+Author: Emptywords
+Source: https://commons.wikimedia.org/wiki/File:Aleja_Niepdleglosci_Warsaw_2022_aerial_(cropped).jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0/
+Local file: /images/cities/warsaw.jpg
+
+Original authors retain their rights; no endorsement of NomadBurn is implied.
