@@ -1,0 +1,309 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StructuredData from "../components/StructuredData.astro";
+import { compareTravelPace, travelPaceExample } from "../lib/compareTravelPace";
+
+const description = "Compare slow travel vs fast travel over the same 90 days. Use your own accommodation and moving costs to see the budget difference, deposits and time spent relocating.";
+const example = compareTravelPace(travelPaceExample);
+const money = (value: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2, minimumFractionDigits: 0 }).format(value);
+const faq = [
+  { q: "Is slow travel always cheaper?", a: "No. Fewer moves reduce transport and setup costs, but a more expensive base can outweigh that saving. Compare actual accommodation quotes for the full 90 days rather than assuming a long-stay discount." },
+  { q: "Why does the three-base plan have two moves?", a: "Moving from base A to B, then B to C, is two internal moves. The first journey out and final journey home are a separate shared cost in this comparison. This tool holds those journeys equal; compare any differences in arrival or departure routes separately." },
+  { q: "Do deposits and travel days count as expenses?", a: "Refundable deposits are shown separately as money tied up, not money spent. If a deposit is non-refundable, include it in the relevant accommodation quote. Travel and setup days are shown as time; the tool does not assume they reduce your income." },
+];
+---
+
+<BaseLayout title="Slow Travel vs Fast Travel: 90-Day Cost Comparison | NomadBurn" description={description} canonicalPath="/slow-travel-vs-fast-travel/">
+  <StructuredData data={{ "@context": "https://schema.org", "@type": "Article", headline: "Slow travel vs fast travel: compare your 90-day budget", description, dateModified: "2026-11-05", mainEntityOfPage: "https://nomadburn.com/slow-travel-vs-fast-travel/" }} />
+
+  <section class="content-hero pace-hero">
+    <h1>Slow travel vs fast travel.<br /><span>What does moving cost you?</span></h1>
+    <p class="subtitle">One base for three months, or a new city every month? Compare the same 90 days using your own quotes. Fewer moves can cut costs, but a pricier base can cancel out the saving.</p>
+    <div class="hero-actions">
+      <a class="text-button" href="#pace-calculator">Compare your 90 days</a>
+      <a class="ghost-button" href="#choose-your-pace">Which pace fits your plans?</a>
+    </div>
+  </section>
+
+  <section id="travel-scenes" class="pace-overview" aria-label="The two travel plans">
+    <div>
+      <h2>Stay a little longer</h2>
+      <p><strong>1 base · 90 days · 0 internal moves</strong></p>
+      <figure class="pace-scene">
+        <img src="/images/travel-pace/slow-travel-workspace.jpg" width="1200" height="800" alt="An unpacked apartment workspace with a laptop, notebook and coffee beside an open window." loading="lazy" decoding="async" />
+        <figcaption>A workspace to settle into. AI-generated scene.</figcaption>
+      </figure>
+      <p>One accommodation quote. Fewer repeat check-ins and setup days. More time to build a working routine.</p>
+    </div>
+    <div>
+      <h2>Keep exploring</h2>
+      <p><strong>3 bases · 30 days each · 2 internal moves</strong></p>
+      <figure class="pace-scene">
+        <img src="/images/travel-pace/fast-travel-station.jpg" width="1200" height="800" alt="Packed luggage and a laptop sleeve beside a bench in a railway station waiting area." loading="lazy" decoding="async" />
+        <figcaption>Packed for the next base. AI-generated scene.</figcaption>
+      </figure>
+      <p>Three accommodation quotes. Two sets of transport and setup costs. More places within the same time away.</p>
+    </div>
+  </section>
+
+  <section id="pace-calculator" class="pace-section" aria-labelledby="pace-tool-title">
+    <div class="pace-section-heading">
+      <div><h2 id="pace-tool-title">Put a price on your travel pace</h2><p>All amounts in USD. Start with the example, then replace it with your quotes.</p></div>
+      <a href="#pace-results" class="pace-result-link">Jump to the comparison</a>
+    </div>
+    <p class="pace-example-note">Illustrative example only — these are not city prices or promised rental discounts.</p>
+    <div class="pace-workspace">
+      <form id="pace-form" class="tool-panel" aria-labelledby="pace-tool-title" novalidate>
+        <fieldset>
+          <legend>Accommodation for the full 90 days</legend>
+          <p class="field-help" id="accommodation-help">Use the complete quote, including cleaning, booking fees and taxes. Exclude refundable deposits.</p>
+          <div class="field-grid">
+            <div class="field"><label for="slowAccommodation">One base: total accommodation ($)</label><input id="slowAccommodation" name="slowAccommodation" type="number" min="0" step="0.01" required value={travelPaceExample.slowAccommodation} aria-describedby="accommodation-help" /></div>
+            <div class="field"><label for="fastAccommodation">Three bases: total accommodation ($)</label><input id="fastAccommodation" name="fastAccommodation" type="number" min="0" step="0.01" required value={travelPaceExample.fastAccommodation} aria-describedby="accommodation-help" /></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Costs shared by both plans</legend>
+          <div class="field-grid">
+            <div class="field"><label for="monthlyLiving">Other living costs per month ($)</label><input id="monthlyLiving" name="monthlyLiving" type="number" min="0" step="0.01" required value={travelPaceExample.monthlyLiving} aria-describedby="living-help" /><p class="field-help" id="living-help">Food, local transport, workspace, insurance and recurring bills. Same budget in both plans; multiplied by 3.</p></div>
+            <div class="field"><label for="commonTravel">First arrival + final departure total ($)</label><input id="commonTravel" name="commonTravel" type="number" min="0" step="0.01" required value={travelPaceExample.commonTravel} aria-describedby="common-help" /><p class="field-help" id="common-help">Shared journey costs for the whole trip. Leave at 0 if excluded from both plans.</p></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Each move between bases</legend>
+          <p class="field-help">Only the three-base plan has internal moves: A → B and B → C. Use the average of those two moves.</p>
+          <div class="field-grid">
+            <div class="field"><label for="transportPerMove">Transport + baggage per move ($)</label><input id="transportPerMove" name="transportPerMove" type="number" min="0" step="0.01" required value={travelPaceExample.transportPerMove} /><p class="field-help">Flight or train, baggage and transfers.</p></div>
+            <div class="field"><label for="setupPerMove">Other setup costs per move ($)</label><input id="setupPerMove" name="setupPerMove" type="number" min="0" step="0.01" required value={travelPaceExample.setupPerMove} /><p class="field-help">Extra SIM setup or overlapping rent. Count each item once.</p></div>
+            <div class="field full"><label for="daysPerMove">Travel + setup days per move</label><input id="daysPerMove" name="daysPerMove" type="number" min="0" max="45" step="0.1" required value={travelPaceExample.daysPerMove} aria-describedby="time-help" /><p class="field-help" id="time-help">Time away from your normal routine, not an assumed loss of paid work.</p></div>
+          </div>
+        </fieldset>
+        <details class="deposit-inputs">
+          <summary>Refundable deposits <span>Keep cash tied up separate</span></summary>
+          <p class="field-help" id="deposit-help">Enter the most you expect to have tied up at once in each plan. This is not added to expenses or used to predict payment dates.</p>
+          <div class="field-grid">
+            <div class="field"><label for="slowDeposit">One base: deposits tied up ($)</label><input id="slowDeposit" name="slowDeposit" type="number" min="0" step="0.01" required value={travelPaceExample.slowDeposit} aria-describedby="deposit-help" /></div>
+            <div class="field"><label for="fastDeposit">Three bases: deposits tied up ($)</label><input id="fastDeposit" name="fastDeposit" type="number" min="0" step="0.01" required value={travelPaceExample.fastDeposit} aria-describedby="deposit-help" /></div>
+          </div>
+        </details>
+        <p id="pace-error" class="pace-error" role="alert" hidden></p>
+        <div class="pace-form-actions"><button class="text-button" type="submit">See my comparison</button><button id="pace-reset" class="pace-reset" type="button">Reset example</button></div>
+        <noscript><p class="field-help">JavaScript is needed to update the comparison. The worked example below remains available.</p></noscript>
+      </form>
+
+      <section id="pace-results" class="pace-results" aria-labelledby="pace-results-title" tabindex="-1">
+        <div class="pace-results-heading"><h3 id="pace-results-title">Your 90-day comparison</h3><span id="pace-example-label">Example inputs</span></div>
+        <a class="pace-edit-link" href="#pace-form">Edit inputs</a>
+        <p id="pace-invalid" class="pace-error" hidden>Comparison paused. Complete the highlighted field to see updated totals.</p>
+        <div id="pace-valid-results">
+          <div class="pace-totals">
+            <div><span>One base</span><strong data-result="slowTotal">{money(example.slowTotal)}</strong><span>90 days in one place</span></div>
+            <div><span>Three bases</span><strong data-result="fastTotal">{money(example.fastTotal)}</strong><span>30 days in each place</span></div>
+          </div>
+          <div class="pace-verdict" role="status" aria-live="polite" aria-atomic="true"><strong data-result="verdict">One base costs {money(example.difference)} less</strong><p data-result="monthly">That's {money(example.monthlyDifference)} per month over 3 planning months.</p></div>
+          <table class="pace-breakdown">
+            <caption>Where the difference comes from</caption>
+            <thead><tr><th scope="col">90-day costs</th><th scope="col">1 base</th><th scope="col">3 bases</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Accommodation</th><td data-result="slowAccommodation">{money(travelPaceExample.slowAccommodation)}</td><td data-result="fastAccommodation">{money(travelPaceExample.fastAccommodation)}</td></tr>
+              <tr><th scope="row">Other living costs</th><td data-result="livingTotal">{money(example.livingTotal)}</td><td data-result="livingTotal">{money(example.livingTotal)}</td></tr>
+              <tr><th scope="row">Internal moves</th><td>$0</td><td data-result="movingTotal">{money(example.movingTotal)}</td></tr>
+              <tr><th scope="row">Arrival + departure</th><td data-result="commonTravel">{money(travelPaceExample.commonTravel)}</td><td data-result="commonTravel">{money(travelPaceExample.commonTravel)}</td></tr>
+            </tbody>
+          </table>
+          <p class="pace-explainer" data-result="explanation">Three bases add {money(example.accommodationDifference)} in accommodation and {money(example.movingTotal)} for 2 internal moves.</p>
+          <dl class="pace-extra-results">
+            <div><dt>Extra travel + setup time</dt><dd><strong data-result="movingDays">{example.movingDays} days</strong><span>Across 2 internal moves. No income loss assumed.</span></dd></div>
+            <div><dt>Refundable cash tied up</dt><dd><strong><span data-result="slowDeposit">{money(travelPaceExample.slowDeposit)}</span> / <span data-result="fastDeposit">{money(travelPaceExample.fastDeposit)}</span></strong><span>One base / three bases. Separate from expenses.</span></dd></div>
+          </dl>
+          <p class="field-help">A lower cost is one part of the decision. This comparison does not calculate savings runway or when bills are due.</p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section id="choose-your-pace" class="pace-section" aria-labelledby="pace-choice-title">
+    <h2 id="pace-choice-title">Which pace fits your plans?</h2>
+    <div class="pace-reading-grid">
+      <div><h3>Choose a longer stay when…</h3><ul><li>You want to settle into a regular work week.</li><li>Your actual long-stay quote beats the combined shorter stays.</li><li>Travel and repeat setup would crowd out time you want for work or rest.</li></ul></div>
+      <div><h3>Choose more bases when…</h3><ul><li>Exploring several places is the purpose of this trip.</li><li>Your work schedule has room for the two moves.</li><li>The shorter stays suit your plans better than committing to one base.</li></ul></div>
+    </div>
+    <p>Try both with your quotes. A costly single base can be more expensive even with fewer moves. Check the rules and permitted stay for each destination separately; a cheaper comparison does not establish visa eligibility.</p>
+  </section>
+
+  <section class="content-panel pace-method" aria-labelledby="pace-method-title">
+    <h2 id="pace-method-title">How to make this comparison useful</h2>
+    <ol>
+      <li><strong>Price the full stay.</strong> Get one 90-day accommodation quote and three 30-day quotes. Add cleaning, booking fees and applicable taxes. Use your actual dates; do not assume a monthly discount.</li>
+      <li><strong>Separate moving from living.</strong> Count city-to-city tickets, bags and transfers under moves. Count local transport under living. Keep overlapping rent out of setup if it is already in your accommodation total.</li>
+      <li><strong>Keep the scope consistent.</strong> Living costs and first arrival/final departure are held equal to isolate pace. If your destinations have very different daily costs or different international routes, this simplified comparison needs those differences assessed separately.</li>
+      <li><strong>Check cash and time as well.</strong> Deposits may tie up cash; refundable does not mean available today. Enter realistic travel and settling-in time without treating every travel day as lost wages.</li>
+    </ol>
+    <div class="pace-formula"><strong>90-day total</strong><p>Accommodation total + (other monthly living costs × 3) + internal moving costs + shared arrival and departure costs.</p></div>
+    <p>Here, 90 days means three 30-day planning months. One base has no internal move; three bases have two. A per-move amount is the average across those two moves. Refundable deposits and time sit outside the expense total.</p>
+    <details><summary>Work through the example</summary><p>One base: $2,700 accommodation + $1,800 living + $350 shared travel = <strong>$4,850</strong>. Three bases: $3,300 accommodation + $1,800 living + 2 × ($250 transport + $50 setup) + $350 shared travel = <strong>$6,050</strong>.</p><p>The $1,200 difference is $600 in accommodation plus $600 in moving costs. These are hypothetical inputs, not a cost-of-living estimate for a particular city.</p></details>
+  </section>
+
+  <section class="pace-section faq" aria-labelledby="pace-faq-title"><h2 id="pace-faq-title">Questions about travel pace and cost</h2>{faq.map(item => <div><h3>{item.q}</h3><p>{item.a}</p></div>)}</section>
+
+  <section class="pace-next" aria-labelledby="pace-next-title"><h2 id="pace-next-title">Keep planning</h2><p>Still choosing where to stay? <a href="/digital-nomad-cost-of-living/">Compare city cost baselines</a>. Once the spending plan is clear, <a href="/digital-nomad-burn-rate-calculator/">check your monthly burn rate</a> or <a href="/how-much-savings-before-becoming-a-digital-nomad/">build a savings target</a>.</p></section>
+  <section class="pace-sources" aria-labelledby="pace-sources-title"><h2 id="pace-sources-title">Why these costs are included</h2><p>Community discussions surface the questions behind this tool: <a href="https://www.reddit.com/r/digitalnomad/comments/1g4tdtr/how_do_digital_nomads_afford_this_lifestyle/" rel="noopener noreferrer">short-stay prices and repeated moves</a>, and <a href="https://www.reddit.com/r/digitalnomad/comments/1rfcliv/what_financial_mistake_cost_you_the_most_as_a/" rel="noopener noreferrer">rent paid ahead of the month it covers</a>. JB Nomad Life also discusses <a href="https://www.youtube.com/watch?v=3kug44pxz0Q&t=376s" rel="noopener noreferrer">flights between bases, deposits and travel time</a> in a personal account.</p><p>These are individual experiences, not a price survey. The calculator uses your inputs, not their quoted prices. Sources and calculation reviewed November 5, 2026. For the separate city estimates, see our <a href="/methodology/">cost methodology</a>.</p></section>
+
+  <script>
+    import { compareTravelPace, travelPaceExample, type TravelPaceInputs } from "../lib/compareTravelPace";
+
+    const form = document.querySelector<HTMLFormElement>("#pace-form")!;
+    const results = document.querySelector<HTMLElement>("#pace-results")!;
+    const validResults = document.querySelector<HTMLElement>("#pace-valid-results")!;
+    const error = document.querySelector<HTMLElement>("#pace-error")!;
+    const invalidNotice = document.querySelector<HTMLElement>("#pace-invalid")!;
+    const exampleLabel = document.querySelector<HTMLElement>("#pace-example-label")!;
+    const fields = Array.from(form.querySelectorAll<HTMLInputElement>("input"));
+    const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2, minimumFractionDigits: 0 });
+
+    function updateComparison() {
+      const invalid = fields.find(field => !field.validity.valid || !Number.isFinite(field.valueAsNumber));
+      fields.forEach(field => field.removeAttribute("aria-invalid"));
+      error.hidden = !invalid;
+      invalidNotice.hidden = !invalid;
+      validResults.hidden = !!invalid;
+      if (invalid) {
+        invalid.setAttribute("aria-invalid", "true");
+        error.textContent = invalid.id === "daysPerMove"
+          ? "Enter travel and setup time between 0 and 45 days per move, in steps of 0.1."
+          : `Enter an amount of 0 or more, with up to two decimal places, for ${invalid.labels?.[0]?.textContent?.toLowerCase()}.`;
+        return false;
+      }
+      const input = Object.fromEntries(fields.map(field => [field.name, field.valueAsNumber])) as TravelPaceInputs;
+      const result = compareTravelPace(input);
+      const amount = money.format(Math.abs(result.difference));
+      const values: Record<string, string> = Object.fromEntries(Object.entries({ ...input, ...result }).map(([key, value]) => [key, money.format(value)]));
+      values.verdict = result.difference === 0 ? "Both plans cost the same" : `${result.difference > 0 ? "One base costs" : "Three bases cost"} ${amount} less`;
+      values.monthly = result.difference === 0 ? "Your accommodation and moving costs balance out over 90 days." : `That's ${money.format(Math.abs(result.monthlyDifference))} per month over 3 planning months.`;
+      values.explanation = result.accommodationDifference >= 0
+        ? `Three bases add ${money.format(result.accommodationDifference)} in accommodation and ${money.format(result.movingTotal)} for 2 internal moves.`
+        : `Three bases save ${money.format(Math.abs(result.accommodationDifference))} in accommodation, with ${money.format(result.movingTotal)} added for 2 internal moves.`;
+      values.movingDays = `${Number(result.movingDays.toFixed(1))} ${result.movingDays === 1 ? "day" : "days"}`;
+      results.querySelectorAll<HTMLElement>("[data-result]").forEach(element => { element.textContent = values[element.dataset.result!]; });
+      exampleLabel.textContent = fields.every(field => field.valueAsNumber === travelPaceExample[field.name as keyof TravelPaceInputs]) ? "Example inputs" : "Your inputs";
+      return true;
+    }
+
+    form.addEventListener("input", updateComparison);
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      if (updateComparison()) {
+        results.scrollIntoView({ block: "start" });
+        results.focus({ preventScroll: true });
+      } else {
+        const invalid = fields.find(field => field.getAttribute("aria-invalid") === "true");
+        invalid?.closest("details")?.setAttribute("open", "");
+        invalid?.focus();
+      }
+    });
+    document.querySelector("#pace-reset")!.addEventListener("click", () => { form.reset(); updateComparison(); });
+  </script>
+</BaseLayout>
+
+<style>
+  .pace-hero { max-width: 980px; padding-top: 42px; }
+  .pace-hero h1 { max-width: 980px; font-size: clamp(2.3rem, 5.3vw, 4rem); line-height: 1.08; text-wrap: balance; }
+  .pace-hero h1 span { color: var(--accent-dark); }
+  .pace-hero .subtitle { max-width: 780px; }
+  .pace-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px; margin: 12px 0 38px; border-block: 1px solid var(--line); scroll-margin-top: 18px; }
+  .pace-overview > div { padding: 22px 0; }
+  .pace-overview h2 { margin: 0 0 8px; font-size: 1.3rem; }
+  .pace-overview p { color: var(--muted); max-width: 52ch; line-height: 1.6; margin: 6px 0; }
+  .pace-overview strong { color: var(--ink); font-size: 0.94rem; }
+  .pace-scene { margin: 18px 0 14px; }
+  .pace-scene img { display: block; width: 100%; height: auto; border-radius: 7px; }
+  .pace-scene figcaption { margin-top: 8px; color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+  .pace-section { margin: 40px 0; scroll-margin-top: 18px; }
+  .pace-section h2, .pace-next h2 { margin: 0 0 10px; font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.2; }
+  .pace-section p, .pace-section li, .pace-next p, .pace-method li { color: var(--muted); line-height: 1.65; }
+  .pace-section-heading { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+  .pace-section-heading p { margin: 0; }
+  .pace-result-link { min-height: 44px; display: inline-flex; align-items: center; color: var(--accent-dark); text-underline-offset: 4px; white-space: nowrap; font-weight: 650; }
+  .pace-example-note { font-size: 0.86rem; margin: 10px 0 18px; }
+  .pace-workspace { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 24px; align-items: start; }
+  fieldset { min-width: 0; padding: 0; margin: 0 0 24px; border: 0; }
+  fieldset + fieldset { border-top: 1px solid var(--line); padding-top: 22px; }
+  legend { font-weight: 800; font-size: 1.05rem; margin-bottom: 12px; padding: 0; float: left; width: 100%; }
+  legend + * { clear: both; }
+  .field-help { font-size: 0.82rem; line-height: 1.55; color: var(--muted); margin: 0; }
+  fieldset > .field-help { margin: 0 0 14px; }
+  .field { align-content: start; }
+  .deposit-inputs { padding-block: 18px; border-block: 1px solid var(--line); }
+  summary { cursor: pointer; font-weight: 750; padding-block: 6px; }
+  summary span { display: block; margin: 4px 0 0 16px; color: var(--muted); font-size: 0.82rem; font-weight: 400; }
+  .deposit-inputs[open] > p { margin: 10px 0 14px; }
+  .pace-form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 22px; }
+  .pace-form-actions .text-button { border: 0; background: var(--accent-dark); }
+  .pace-reset { background: transparent; border: 0; color: var(--muted); min-height: 44px; padding: 8px; text-decoration: underline; text-underline-offset: 4px; }
+  .pace-error { color: var(--red) !important; font-size: 0.9rem; }
+  input[aria-invalid="true"] { border-color: var(--red); }
+  .pace-results { padding: 26px; background: #f2f6ef; border: 1px solid #d5e0d1; border-radius: 8px; position: sticky; top: 18px; scroll-margin-top: 18px; min-width: 0; font-variant-numeric: tabular-nums; }
+  .pace-results-heading { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: space-between; }
+  .pace-results h3 { font-size: 1.05rem; margin: 0; }
+  .pace-results-heading > span { color: var(--muted); font-size: 0.8rem; }
+  .pace-edit-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent-dark); font-size: 0.83rem; text-underline-offset: 3px; }
+  #pace-form { scroll-margin-top: 18px; }
+  .pace-totals { display: grid; grid-template-columns: 1fr 1fr; padding: 26px 0 22px; gap: 18px; }
+  .pace-totals > div { display: grid; gap: 7px; min-width: 0; }
+  .pace-totals strong { font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -0.025em; overflow-wrap: anywhere; }
+  .pace-totals span { font-size: 0.83rem; color: var(--muted); }
+  .pace-totals span:first-child { color: var(--ink); font-size: 0.95rem; font-weight: 750; }
+  .pace-verdict { padding: 17px 0; border-block: 1px solid #d5e0d1; }
+  .pace-verdict strong { color: #215c3f; font-size: 1.1rem; }
+  .pace-verdict p { margin: 5px 0 0; font-size: 0.88rem; }
+  .pace-breakdown { min-width: 0; table-layout: fixed; background: transparent; margin: 20px 0 12px; }
+  .pace-breakdown caption { text-align: left; font-weight: 750; margin-bottom: 12px; font-size: 0.9rem; }
+  .pace-breakdown th, .pace-breakdown td { padding: 10px 4px; font-size: 0.82rem; background: transparent; overflow-wrap: anywhere; }
+  .pace-breakdown th { text-transform: none; font-weight: 600; width: 46%; }
+  .pace-breakdown td, .pace-breakdown thead th:not(:first-child) { text-align: right; width: 27%; }
+  .pace-breakdown thead th { color: var(--muted); font-size: 0.76rem; }
+  .pace-explainer { font-size: 0.86rem; }
+  .pace-extra-results { margin: 22px 0; padding-top: 4px; border-top: 1px solid #d5e0d1; }
+  .pace-extra-results > div { margin-top: 16px; }
+  .pace-extra-results dt { font-size: 0.83rem; font-weight: 650; }
+  .pace-extra-results dd { display: grid; gap: 4px; margin: 7px 0 0; }
+  .pace-extra-results dd > span { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+  .pace-reading-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  .pace-reading-grid h3 { margin: 20px 0 8px; font-size: 1.15rem; }
+  .pace-reading-grid ul, .pace-method ol { padding-left: 22px; }
+  .pace-reading-grid li, .pace-method li { padding-left: 3px; margin: 10px 0; }
+  .pace-method { padding: 28px; }
+  .pace-method > p, .pace-method li, .pace-section > p { max-width: 76ch; }
+  .pace-formula { padding-block: 18px; border-block: 1px solid var(--line); margin-block: 22px; }
+  .pace-formula p { margin: 7px 0 0; }
+  .pace-method details p { max-width: 76ch; }
+  .faq > div { max-width: 76ch; margin-top: 24px; }
+  .faq h3 { font-size: 1.05rem; margin: 0 0 7px; }
+  .faq p { margin: 0; }
+  .pace-next { padding: 26px 0; border-block: 1px solid var(--line); }
+  .pace-next p { max-width: 76ch; margin-bottom: 0; }
+  .pace-next a, .pace-sources a { color: var(--accent-dark); text-underline-offset: 3px; }
+  .pace-sources { max-width: 80ch; padding: 30px 0 12px; }
+  .pace-sources h2 { font-size: 1rem; margin: 0 0 12px; }
+  .pace-sources p { color: var(--muted); font-size: 0.84rem; line-height: 1.65; }
+  a:focus-visible, button:focus-visible, summary:focus-visible, .pace-results:focus-visible { outline: 3px solid var(--accent-dark); outline-offset: 4px; }
+  .pace-hero .text-button { background: var(--accent-dark); }
+  .pace-reset:hover, .pace-result-link:hover { color: var(--ink); }
+  .text-button:hover { background: #792111; }
+  [hidden] { display: none !important; }
+  @media (max-width: 980px) { .pace-workspace { grid-template-columns: 1fr; } .pace-results { position: static; } }
+  @media (max-width: 720px) {
+    .pace-hero { padding-top: 26px; }
+    .pace-overview { grid-template-columns: 1fr; gap: 0; margin-bottom: 28px; }
+    .pace-overview > div { padding: 18px 0; }
+    .pace-overview > div + div { padding: 18px 0; border-left: 0; border-top: 1px solid var(--line); }
+    .pace-section-heading { display: block; }
+    .pace-result-link { margin-top: 6px; }
+    .pace-section { margin-block: 30px; }
+    .tool-panel, .pace-results, .pace-method { padding: 18px; }
+    .pace-reading-grid { grid-template-columns: 1fr; gap: 0; }
+    .pace-totals strong { font-size: 1.9rem; }
+    .pace-form-actions { align-items: stretch; }
+    .pace-form-actions .text-button { flex: 1; justify-content: center; }
+  }
+</style>

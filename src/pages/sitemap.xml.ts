@@ -9,6 +9,7 @@ export function GET() {
     "/digital-nomad-burn-rate-calculator/",
     "/nomad-runway-calculator/",
     "/digital-nomad-cost-of-living/",
+    "/slow-travel-vs-fast-travel/",
     "/methodology/",
     "/about/",
     "/contact/",
@@ -30,7 +31,7 @@ ${paths
   .map(
     (path) => `  <url>
     <loc>${site}${path}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${path === "/slow-travel-vs-fast-travel/" ? "2026-11-05" : lastmod}</lastmod>
     <changefreq>${path === "/" ? "weekly" : "monthly"}</changefreq>
     <priority>${path === "/" ? "1.0" : path.startsWith("/cities/") ? "0.7" : path.includes("privacy") || path.includes("terms") ? "0.3" : "0.8"}</priority>
   </url>`,
