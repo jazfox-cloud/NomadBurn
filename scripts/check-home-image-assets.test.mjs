@@ -3,10 +3,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { cityImages } from "../src/data/cities.ts";
 
-for (const city of ["Tbilisi", "Budapest", "Prague", "Warsaw"]) {
+for (const city of Object.keys(cityImages)) {
   test(`${city} photo is bundled with the site and retains attribution`, () => {
     const image = cityImages[city];
-    assert.ok(image.src.startsWith("/"), "Homepage photo must not depend on an external image host");
+    assert.ok(image.src.startsWith("/"), "City photo must not depend on an external image host");
     const bytes = readFileSync(new URL(`../public${image.src}`, import.meta.url));
     assert.equal(bytes.subarray(0, 3).toString("hex"), "ffd8ff", "Expected a JPEG photo, not an HTML error response");
     assert.ok(image.width > 0 && image.height > 0, "Reserve intrinsic image dimensions");

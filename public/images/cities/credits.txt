@@ -28,4 +28,82 @@ Source: https://commons.wikimedia.org/wiki/File:Aleja_Niepdleglosci_Warsaw_2022_
 License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0/
 Local file: /images/cities/warsaw.jpg
 
+Chiang Mai
+Author: Nawit science
+Source: https://commons.wikimedia.org/wiki/File:0020-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B4%E0%B8%87%E0%B8%AB%E0%B9%8C%E0%B8%A7%E0%B8%A3%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3.jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Local file: /images/cities/chiang-mai.jpg
+
+Bali Canggu
+Author: Flickr user: afternoon
+Source: https://commons.wikimedia.org/wiki/File:Canggu_Beach.jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Local file: /images/cities/bali-canggu.jpg
+
+Lisbon
+Author: Vitor Oliveira from Torres Vedras, PORTUGAL
+Source: https://commons.wikimedia.org/wiki/File:Lisboa_-_Portugal_(52597836992).jpg
+License: CC BY-SA 2.0 — https://creativecommons.org/licenses/by-sa/2.0
+Local file: /images/cities/lisbon.jpg
+
+Mexico City
+Author: Gobierno CDMX
+Source: https://commons.wikimedia.org/wiki/File:Sobrevuelos_CDMX_HJ2A4913_(25514321687)_(cropped).jpg
+License: CC0 1.0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Local file: /images/cities/mexico-city.jpg
+
+Ho Chi Minh City
+Author: Lê Minh Phát
+Source: https://commons.wikimedia.org/wiki/File:Ho_Chi_Minh_City_panorama_2019_(cropped2).jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Local file: /images/cities/ho-chi-minh-city.jpg
+
+Medellin
+Author: I.D. R.J.
+Source: https://commons.wikimedia.org/wiki/File:MEDELL%C3%8DN.jpg
+License: CC BY-SA 2.0 — https://creativecommons.org/licenses/by-sa/2.0
+Local file: /images/cities/medellin.jpg
+
+Bangkok
+Author: Ninara from Helsinki, Finland
+Source: https://commons.wikimedia.org/wiki/File:4Y1A1159_Bangkok_(33536795515).jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Local file: /images/cities/bangkok.jpg
+
+Kuala Lumpur
+Author: Walkerssk
+Source: https://commons.wikimedia.org/wiki/File:Kuala_Lumpur_Skyline_at_dusk_1.jpg
+License: CC0 1.0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Local file: /images/cities/kuala-lumpur.jpg
+
+Belgrade
+Author: ZlatanJovanovic
+Source: https://commons.wikimedia.org/wiki/File:Panorama_Belgrad.jpg
+License: CC BY 3.0 — https://creativecommons.org/licenses/by/3.0
+Local file: /images/cities/belgrade.jpg
+
+Bucharest
+Author: Madalin Pentelie
+Source: https://commons.wikimedia.org/wiki/File:Bucharest_University_Square_(cropped).jpg
+License: CC0 1.0 — https://creativecommons.org/publicdomain/zero/1.0/deed.en
+Local file: /images/cities/bucharest.jpg
+
+Da Nang
+Author: Somerset999
+Source: https://commons.wikimedia.org/wiki/File:Dragon_Bridge,_Da_Nang_during_day_-_20230819_(cropped).jpg
+License: CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0
+Local file: /images/cities/da-nang.jpg
+
+Sofia
+Author: Deensel
+Source: https://commons.wikimedia.org/wiki/File:Panoramic_view_over_central_Sofia_and_the_Vitosha_Mountain_2017-10-08.jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Local file: /images/cities/sofia.jpg
+
+Buenos Aires
+Author: leonardo samrani from rosario, argentina
+Source: https://commons.wikimedia.org/wiki/File:Puerto_Madero_-_Puente_de_la_mujer_(44673627614).jpg
+License: CC BY 2.0 — https://creativecommons.org/licenses/by/2.0
+Local file: /images/cities/buenos-aires.jpg
+
 Original authors retain their rights; no endorsement of NomadBurn is implied.

@@ -40,10 +40,10 @@ for (const slug of citySlugs) {
 }
 
 const kualaLumpur = readFileSync(join(citiesRoot, "kuala-lumpur/index.html"), "utf8");
-assert.ok(kualaLumpur.includes("/thumb/c/cc/Kuala_Lumpur_Skyline_at_dusk_1.jpg/"));
+assert.ok(kualaLumpur.includes("/images/cities/kuala-lumpur.jpg"));
 assert.ok(kualaLumpur.includes("File:Kuala_Lumpur_Skyline_at_dusk_1.jpg"));
 assert.ok(kualaLumpur.includes("Walkerssk / Wikimedia Commons"));
 assert.ok(kualaLumpur.includes("CC0 1.0"));
-assert.match(kualaLumpur, /width="960" height="555"/);
+assert.match(kualaLumpur, /width="960" height="554"/);
 
 console.log(`City page regression checks passed for ${citySlugs.length} pages.`);
